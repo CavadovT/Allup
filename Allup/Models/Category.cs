@@ -23,5 +23,6 @@ namespace Allup.Models
         public Nullable<DateTime> DeletedAt { get; set; }
         public Nullable<DateTime> UpdatedAt { get; set; }
         public List<Product> Products { get; set; }
+        public List<Blog> Blogs { get; set; }
     }
 }

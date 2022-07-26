@@ -13,8 +13,8 @@ namespace Allup.Models
         public string Adress { get; set; }
         public string PhoneNumber { get; set; }
         public string WebSite { get; set; }
-        public DateTime ScheduleOpen { get; set; }
-        public DateTime SchedulClose { get; set; }
+        public string Scheduler { get; set; }
+        
 
 
     }
