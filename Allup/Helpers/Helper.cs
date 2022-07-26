@@ -10,4 +10,9 @@
         Member,
 
     }
+    public enum OrderStatus
+    {
+        Pending,
+        Shipped,
+    }
 }

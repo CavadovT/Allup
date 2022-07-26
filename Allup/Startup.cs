@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,23 +31,30 @@ namespace Allup
             services.AddControllersWithViews();
             services.AddDbContext<AppDbContext>(option =>
             {
-                option.UseSqlServer(_config.GetConnectionString("DefaultConnection"));
+               option.UseSqlServer(_config.GetConnectionString("DefaultConnection"));
             });
-            services.AddIdentity<User, IdentityRole>(option => {
+
+            services.AddSession(option =>
+            {
+                option.IdleTimeout = TimeSpan.FromMinutes(15);
+            });
+           
+            services.AddIdentity<User, IdentityRole>(option =>
+            {
                 option.Password.RequiredLength = 8;
-                option.Password.RequireLowercase= true;
-                option.Password.RequireUppercase= true;
-                option.Password.RequireNonAlphanumeric= true;
-                option.Password.RequireDigit= true;
+                option.Password.RequireLowercase = true;
+                option.Password.RequireUppercase = true;
+                option.Password.RequireNonAlphanumeric = true;
+                option.Password.RequireDigit = true;
 
-                option.User.RequireUniqueEmail= true;
-                
-                option.Lockout.MaxFailedAccessAttempts= 3;
-                option.Lockout.AllowedForNewUsers= true;
-                option.Lockout.DefaultLockoutTimeSpan= TimeSpan.FromMinutes(5);
+                option.User.RequireUniqueEmail = true;
 
-                
-            });
+                option.Lockout.MaxFailedAccessAttempts = 3;
+                option.Lockout.AllowedForNewUsers = true;
+                option.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+
+
+            }).AddEntityFrameworkStores<AppDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,13 +74,16 @@ namespace Allup
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                  name:"default",
-                  pattern:"{controller=home}/{action=index}/{id?}"
+                  "default",
+                  "{controller=home}/{action=index}/{id?}"
                     );
-                endpoints.MapControllerRoute(
+                endpoints.MapAreaControllerRoute(
                     name: "areas",
-                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}",
+                    areaName:"AdminPanel"
                     );
+                
+
             });
         }
     }
