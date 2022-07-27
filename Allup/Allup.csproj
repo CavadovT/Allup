@@ -17,10 +17,8 @@
     <Folder Include="Areas\AdminPanel\Data\" />
     <Folder Include="Areas\AdminPanel\Models\" />
     <Folder Include="Areas\AdminPanel\Views\" />
-    <Folder Include="ViewComponents\" />
-    <Folder Include="ViewModels\" />
+    <Folder Include="Interfaces\" />
     <Folder Include="Services\" />
-    <Folder Include="Views\Shared\Components\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -29,7 +29,7 @@ namespace Allup.DAL
         public DbSet<Tag> Tags { get; set; }
         public DbSet<TagProducts> TagProducts { get; set; }
         public DbSet<Testonominal> Testonominals { get; set; }
-
+        public DbSet<SubscripeSection> SubscripeSections { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -39,7 +39,10 @@ namespace Allup.DAL
             new Testonominal { Id = 1, AuthorName = "John Doe", Content = "An has feugiat vivendum, ad vix tacimates accusamus, cum commune lucilius no. Sit at alia civibus indoctum, ea mel regione percipit adipisci. Per modus nostrum vituperata no, eam ne magna solum constituam.", ImgUrl = "author-1.png", Site = "email@yourwebsitename.com" },
             new Testonominal { Id = 2, AuthorName = "John Doe", Content = "An has feugiat vivendum, ad vix tacimates accusamus, cum commune lucilius no. Sit at alia civibus indoctum, ea mel regione percipit adipisci. Per modus nostrum vituperata no, eam ne magna solum constituam.", ImgUrl = "author-1.png", Site = "email@yourwebsitename.com" },
             new Testonominal { Id = 3, AuthorName = "John Doe", Content = "An has feugiat vivendum, ad vix tacimates accusamus, cum commune lucilius no. Sit at alia civibus indoctum, ea mel regione percipit adipisci. Per modus nostrum vituperata no, eam ne magna solum constituam.", ImgUrl = "author-1.png", Site = "email@yourwebsitename.com" }
-
+                );
+            builder.Entity<SubscripeSection>().HasData
+                (
+                new SubscripeSection { Id=1,Title= "Subscribe our newsletter",Desc= "allup is a powerful eCommerce HTML Template",ImgUrl= "bg-newletter.jpg" }
                 );
             builder.Entity<Banner>().HasData
                 (
@@ -48,8 +51,19 @@ namespace Allup.DAL
                 );
             builder.Entity<Bio>().HasData
                 (
-                new Bio { Id = 1, ShippinValue = 35, Logo = "logo.png", PhoneNotified = "24/7 Support", MobilePhone = "+48 500 500 500", AuthorName = "Tural", Adress = "45 Grand Central Terminal New York,NY 1017 United State USA", PhoneNumber = "+123 456 789", WebSite = "email@yourwebsitename.com", Scheduler= "Mon-Sat 9:00pm - 5:00pm Sun:Closed" }
-                ) ;
+                new Bio { Id = 1, ShippinValue = 35, Logo = "logo.png", PhoneNotified = "24/7 Support", MobilePhone = "+48 500 500 500", AuthorName = "Tural", Adress = "45 Grand Central Terminal New York,NY 1017 United State USA", PhoneNumber = "+123 456 789", WebSite = "email@yourwebsitename.com", Scheduler = "Mon-Sat 9:00pm - 5:00pm Sun:Closed" }
+                );
+            builder.Entity<User>().HasData
+                (
+                new User { Id = "admin", FullName = "Tural Cavadov" }
+                );
+            builder.Entity<Blog>().HasData
+                (
+                new Blog { Id = 1, ImgUrl = "blog-1.jpg", CreatedAt = DateTime.Now, Title = "This is Third Post For XipBlog", Desc = "simply dummy text of the printing and typesetting industry. Lorem Ipsum ...", UserId = "admin", CategoryId = 1 },
+                new Blog { Id = 2, ImgUrl = "blog-2.jpg", CreatedAt = DateTime.Now, Title = "This is Third Post For XipBlog", Desc = "simply dummy text of the printing and typesetting industry. Lorem Ipsum ...", UserId = "admin", CategoryId = 1 },
+                new Blog { Id = 3, ImgUrl = "blog-3.jpg", CreatedAt = DateTime.Now, Title = "This is Third Post For XipBlog", Desc = "simply dummy text of the printing and typesetting industry. Lorem Ipsum ...", UserId = "admin", CategoryId = 1 },
+                new Blog { Id = 4, ImgUrl = "blog-4.jpg", CreatedAt = DateTime.Now, Title = "This is Third Post For XipBlog", Desc = "simply dummy text of the printing and typesetting industry. Lorem Ipsum ...", UserId = "admin", CategoryId = 1 }
+                );
             builder.Entity<Slider>().HasData
                 (
                 new Slider { Id = 1, ImgUrl = "slider-1.jpg" },
@@ -134,7 +148,7 @@ namespace Allup.DAL
                 new TagProducts { Id = 5, ProductId = 2, TagId = 4 }
 
                 );
-           
+
         }
     }
 }
