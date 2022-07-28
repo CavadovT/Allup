@@ -1,11 +1,11 @@
 ﻿@model FooterVM
-    <section class="newsletter-area pt-100 pb-100 bg_cover" style="background-image: url(assets/images/@Model.SubscripeSection.ImgUrl)">
+    <section class="newsletter-area pt-100 pb-100 bg_cover" style="background-image: url('@Url.Content($"~/assets/images/{@Model.SubscripeSection.ImgUrl}")')">
         <div class="container">
             <div class="row justify-content-end">
                 <div class="col-lg-8">
                     <div class="newsletter-content">
-                        <h2 class="newsletter-title">@Model.SubscripeSection.Title</h2>
-                        <p>@Model.SubscripeSection.Desc</p>
+                        <h2 class="newsletter-title">@Html.Raw(Model.SubscripeSection.Title)</h2>
+                        <p>@Html.Raw(Model.SubscripeSection.Desc)</p>
 
                         <div class="newsletter-forn">
                             <form method="post">
@@ -18,7 +18,7 @@
             </div> <!-- row -->
         </div> <!-- container -->
     </section>
-     <section class="footer-area bg_cover" style="background-image: url(assets/images/bg-footer.jpg)">
+    <section class="footer-area bg_cover" style="background-image: url('@Url.Content("~/assets/images/bg-footer.jpg")')">
         <div class="footer-widget pt-30 pb-70">
             <div class="container">
                 <div class="row">
@@ -27,8 +27,8 @@
                             <h4 class="footer-title">Contact Details</h4>
 
                             <ul>
-                                <li><i class="fas fa-map-marker-alt"></i> @Model.Bio.Adress</li>
-                                <li><i class="fas fa-phone"></i> <a href="tell:123-456-789">+123 456 789</a>@Model.Bio.PhoneNumber</li>
+                                <li><i class="fas fa-map-marker-alt"></i>@Model.Bio.Adress</li>
+                                <li><i class="fas fa-phone"></i> <a href="tell:123-456-789">@Model.Bio.PhoneNumber</a></li>
                                 <li><i class="fas fa-envelope"></i><a href="mailto://email@yourwebsitename.com">@Model.Bio.WebSite</a></li>
                                 <li><i class="far fa-clock"></i> @Model.Bio.Scheduler</li>
                             </ul>

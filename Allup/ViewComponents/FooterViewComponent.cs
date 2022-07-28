@@ -12,12 +12,11 @@ namespace Allup.ViewComponents
     public class FooterViewComponent:ViewComponent
     {
         private readonly AppDbContext _context;
-        private readonly UserManager<User> _userManager;
+        
 
-        public FooterViewComponent(AppDbContext context, UserManager<User> userManager)
+        public FooterViewComponent(AppDbContext context)
         {
-            _context = context;
-            _userManager = userManager;
+            _context = context; 
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {

@@ -80,14 +80,14 @@ namespace Allup.DAL
                 new Category { Id = 2, Name = "Computer", IsDeleted = false, ImgUrl = "category-2.jpg", CreatedAt = DateTime.Now },
                 new Category { Id = 3, Name = "Smartphone", IsDeleted = false, ImgUrl = "category-3.jpg", CreatedAt = DateTime.Now },
                 new Category { Id = 4, Name = "Game Consoles", IsDeleted = false, ImgUrl = "category-4.jpg", CreatedAt = DateTime.Now },
-                new Category { Id = 7, Name = "Bottoms", ParentId = 1, IsDeleted = false, ImgUrl = "category-5.jpg", CreatedAt = DateTime.Now },
-                new Category { Id = 8, Name = "Tops & Sets", ParentId = 2, IsDeleted = false, ImgUrl = "category-6.jpg", CreatedAt = DateTime.Now },
-                new Category { Id = 9, Name = "Audio & Video", ParentId = 3, IsDeleted = false, ImgUrl = "category-7.jpg", CreatedAt = DateTime.Now },
-                new Category { Id = 10, Name = "Accessories", ParentId = 2, IsDeleted = false, ImgUrl = "category-8.jpg", CreatedAt = DateTime.Now },
-                new Category { Id = 11, Name = "Camera", ParentId = 3, IsDeleted = false, ImgUrl = "category-9.jpg", CreatedAt = DateTime.Now },
-                new Category { Id = 12, Name = "Accessories2", ParentId = 4, IsDeleted = false, ImgUrl = "category-10.jpg", CreatedAt = DateTime.Now },
-                new Category { Id = 13, Name = "Games & Consoles", ParentId = 4, IsDeleted = false, ImgUrl = "category-11.jpg", CreatedAt = DateTime.Now },
-                new Category { Id = 14, Name = "Video Games", ParentId = 4, IsDeleted = false, ImgUrl = "category-12.jpg", CreatedAt = DateTime.Now }
+                new Category { Id = 7, Name = "Bottoms", ParentId = 1, IsDeleted = false,  CreatedAt = DateTime.Now },
+                new Category { Id = 8, Name = "Tops & Sets", ParentId = 2, IsDeleted = false,  CreatedAt = DateTime.Now },
+                new Category { Id = 9, Name = "Audio & Video", ParentId = 3, IsDeleted = false,  CreatedAt = DateTime.Now },
+                new Category { Id = 10, Name = "Accessories", ParentId = 2, IsDeleted = false, CreatedAt = DateTime.Now },
+                new Category { Id = 11, Name = "Camera", ParentId = 3, IsDeleted = false, CreatedAt = DateTime.Now },
+                new Category { Id = 12, Name = "Accessories2", ParentId = 4, IsDeleted = false, CreatedAt = DateTime.Now },
+                new Category { Id = 13, Name = "Games & Consoles", ParentId = 4, IsDeleted = false, CreatedAt = DateTime.Now },
+                new Category { Id = 14, Name = "Video Games", ParentId = 4, IsDeleted = false, CreatedAt = DateTime.Now }
                 );
             builder.Entity<ProductImage>().HasData
                 (

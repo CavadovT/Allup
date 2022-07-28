@@ -1,0 +1,36 @@
+﻿@model Category
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+ <div class="card" style="width: 18rem;">
+  <div class="card-body">
+            @if (Model.ParentId == null)
+            {
+            <strong>Name of Category</strong>
+            <p class="card-text">@Model.Name</p>
+            <strong>Image of Category</strong>
+            <p class="card-text">@Model.ImgUrl</p>
+            
+            <strong>Category Created at:</strong>
+                <p class="card-text">@Model.CreatedAt</p>
+            }
+            else
+            {
+                 <strong>Name of Category</strong>
+                <p class="card-text">@Model.Name</p>
+                <strong>Parent Name of Category</strong>
+                <p class="card-text">@ViewBag.ParenName</p>
+                 <strong>Category Created at:</strong>
+                <p class="card-text">@Model.CreatedAt</p>
+            }
+          
+
+
+  </div>
+  <a class="btn btn-cyan" asp-action="index">Go To Back</a>
+</div>
+</div>
+

@@ -34,10 +34,10 @@ namespace Allup
                option.UseSqlServer(_config.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddSession(option =>
-            {
-                option.IdleTimeout = TimeSpan.FromMinutes(15);
-            });
+            //services.AddSession(option =>
+            //{
+            //    option.IdleTimeout = TimeSpan.FromMinutes(15);
+            //});
            
             services.AddIdentity<User, IdentityRole>(option =>
             {
@@ -54,7 +54,7 @@ namespace Allup
                 option.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
 
 
-            }).AddEntityFrameworkStores<AppDbContext>();
+            }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,23 +67,21 @@ namespace Allup
 
             app.UseRouting();
             app.UseStaticFiles();
-            app.UseSession();
+            //app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                   "Areas",
+                   "{area:exists}/{Controller=Dashboard}/{Action=Index}/{Id?}"
+                   );
+                endpoints.MapControllerRoute(
                   "default",
                   "{controller=home}/{action=index}/{id?}"
                     );
-                endpoints.MapAreaControllerRoute(
-                    name: "areas",
-                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}",
-                    areaName:"AdminPanel"
-                    );
-                
-
+               
             });
         }
     }

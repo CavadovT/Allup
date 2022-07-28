@@ -1,4 +1,4 @@
-﻿<!doctype html>
+﻿<!Doctype html>
 <html class="no-js" lang="en">
 
 
@@ -23,7 +23,7 @@
     
     <link rel="stylesheet" href="~/assets/css/plugins/bootstrap.min.css">
     <link rel="stylesheet" href="~/assets/css/plugins/ionicons.min.css">
-    <link rel="stylesheet" href="~/assets/css/plugins/fontawesome.min.css">
+    <link rel="stylesheet" href="assets/css/plugins/fontawesome.min.css">
 
     <!--===== Plugins CSS (All Plugins Files) =====-->
     
@@ -33,7 +33,8 @@
     <link rel="stylesheet" href="~/assets/css/plugins/default.css">
 
     <!--====== Main Style CSS ======-->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="~/assets/css/style.css">
+
 
 
     <!--====== Use the minified version files listed below for better performance and remove the files listed above ======-->
@@ -61,8 +62,7 @@
    
         @RenderBody()
 
-    @await Component.InvokeAsync("Footer")
-
+    @await Component.InvokeAsync("Footer");
 
          <!--====== Newsletter Part Start ======-->
   <!-- Modal -->
@@ -212,10 +212,11 @@
 
     <!--====== BACK TOP TOP PART ENDS ======-->
 
+   
 
 
     <!--====== Vendors js ======-->
-    <script src="~/assets/js/vendor/jquery-1.12.4.min.js"></script>
+   <script src="~/assets/js/vendor/jquery-1.12.4.min.js"></script>
     <script src="~/assets/js/vendor/modernizr-3.7.1.min.js"></script>
 
     <!--====== Plugins js ======-->
@@ -228,7 +229,7 @@
 
     <!--====== Use the minified version files listed below for better performance and remove the files listed above ======-->
 
-    <!-- <script src="~/assets/js/plugins.min.js"></script> -->
+    <!-- <script src="assets/js/plugins.min.js"></script> -->
     
 
     <!--====== Main Activation js ======-->
