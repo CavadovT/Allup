@@ -132,6 +132,13 @@
                             </a>
                         </li>
                          <li class="sidebar-item pt-2">
+                            <a class="sidebar-link waves-effect waves-dark "  asp-controller="brand" asp-action="index"
+                                aria-expanded="false">
+                                <i class="fas fa-list" aria-hidden="true"></i>
+                                <span class="hide-menu">Brand</span>
+                            </a>
+                        </li>
+                         <li class="sidebar-item pt-2">
                             <a class="sidebar-link waves-effect waves-dark " asp-controller="product" asp-action="index"
                                 aria-expanded="false">
                                 <i class="fas fa-list" aria-hidden="true"></i>
@@ -153,47 +160,8 @@
                                 <span class="hide-menu">Roles</span>
                             </a>
                         </li>
-                        @*<li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="basic-table.html"
-                                aria-expanded="false">
-                                <i class="fa fa-table" aria-hidden="true"></i>
-                                <span class="hide-menu">Basic Table</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="fontawesome.html"
-                                aria-expanded="false">
-                                <i class="fa fa-font" aria-hidden="true"></i>
-                                <span class="hide-menu">Icon</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="map-google.html"
-                                aria-expanded="false">
-                                <i class="fa fa-globe" aria-hidden="true"></i>
-                                <span class="hide-menu">Google Map</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="blank.html"
-                                aria-expanded="false">
-                                <i class="fa fa-columns" aria-hidden="true"></i>
-                                <span class="hide-menu">Blank Page</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="404.html"
-                                aria-expanded="false">
-                                <i class="fa fa-info-circle" aria-hidden="true"></i>
-                                <span class="hide-menu">Error 404</span>
-                            </a>
-                        </li>
-                        <li class="text-center p-20 upgrade-btn">
-                            <a href="https://www.wrappixel.com/templates/ampleadmin/"
-                                class="btn d-grid btn-danger text-white" target="_blank">
-                                Upgrade to Pro</a>
-                        </li>
-*@                    </ul>
+                       
+                  </ul>
 
                 </nav>
                 <!-- End Sidebar navigation -->
@@ -258,6 +226,7 @@
     <!-- ============================================================== -->
     <script src="~/admin/plugins/bower_components/jquery/dist/jquery.min.js"></script>
 
+     @RenderSection("scripts",false);
 
     <!-- Bootstrap tether Core JavaScript -->
     <script src="~/admin/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -275,5 +244,7 @@
     <script src="~/admin/plugins/bower_components/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script>
 
     <script src="~/admin/js/pages/dashboards/dashboard1.js"></script>
+    
 </body>
+
 </html>

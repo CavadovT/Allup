@@ -51,7 +51,7 @@ namespace Allup.Areas.AdminPanel.Controllers
             }
             int pageCount = PageCount(maincat, take);
             int pageCountsub = PageCount(subcat, take);
-            PaginationVM<Category> pagVM = new PaginationVM<Category>(maincat.Skip((page - 1) * take).Take(take).ToList(), subcat.Skip((page - 1) * take).Take(take).ToList(), pageCount, pageCountsub, page);
+            CategoryVM<Category> pagVM = new CategoryVM<Category>(maincat.Skip((page - 1) * take).Take(take).ToList(), subcat.Skip((page - 1) * take).Take(take).ToList(), pageCount, pageCountsub, page);
             return View(pagVM);
 
 
@@ -157,27 +157,22 @@ namespace Allup.Areas.AdminPanel.Controllers
                 ModelState.AddModelError("Name", "Category Name Cannot be Empty!");
                 return View();
             }
-            bool existCategoryName = _context.Categories.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).Any(c => c.Name.ToLower().Trim() == subCategory.Name.ToLower().Trim());
+            bool existCategoryName =await _context.Categories.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).AnyAsync(c => c.Name.ToLower().Trim() == subCategory.Name.ToLower().Trim());
             if (existCategoryName)
             {
                 ModelState.AddModelError("Name", "The name of category is main category exist");
                 return View();
             }
-            int count = 0;
-            List<Category> SubCategoryName = await _context.Categories.Where(c => c.ParentId == subCategory.Id).ToListAsync();
-            foreach (var item in SubCategoryName)
-            {
-                if (item.Name.Trim().ToLower() == subCategory.Name.Trim().ToLower())
-                {
-                    count++;
-                }
 
-            }
-            if (count > 0)
+            bool ExistSubCategoryName = await _context.Categories.Where(c=>c.IsDeleted==false).Where(c => c.ParentId == subCategory.Id).AnyAsync(c => c.Name.ToLower().Trim() == subCategory.Name.ToLower().Trim());
+
+            if (ExistSubCategoryName)
             {
-                ModelState.AddModelError("Name", "The name of subcategory alredy exsist!!!");
+                ModelState.AddModelError("Name", "The name of subcategory alredy exsist in this main category!!!");
                 return View();
             }
+
+
             Category newsubcat = new Category();
             newsubcat.Name = subCategory.Name;
             newsubcat.ParentId = subCategory.Id;
@@ -297,17 +292,9 @@ namespace Allup.Areas.AdminPanel.Controllers
             {
                 return View();
             }
-            List<Category> categoriesinmainsub = await _context.Categories.Where(c => c.IsDeleted == false).Where(c => c.ParentId == subcategory.Id).ToListAsync();
-            int count = 0;
-            foreach (var item in categoriesinmainsub)
-            {
-                if (item.Name.Trim().ToLower() == subcategory.Name.Trim().ToLower())
-                {
-                    count++;
-                }
-
-            }
-            if (count > 0)
+            bool categoriesinmainsub = await _context.Categories.Where(c => c.IsDeleted == false).Where(c => c.ParentId == subcategory.Id).AnyAsync(c=>c.Name.Trim().ToLower() == subcategory.Name.Trim().ToLower());
+            
+            if (categoriesinmainsub)
             {
                 ModelState.AddModelError("Name", "The name of subcategory alredy exsist at main cat!!!");
                 return View();

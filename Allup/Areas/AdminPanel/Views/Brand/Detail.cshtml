@@ -1,0 +1,21 @@
+﻿@model Brand
+@{
+    ViewData["Title"] = "Detail";
+    Layout = "~/Areas/AdminPanel/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+ <div class="card" style="width: 18rem;">
+  <div class="card-body">
+      <strong>Name of Brand</strong>
+    <p class="card-text">@Model.Name</p>
+    
+      <strong>For this Brand Count Product</strong>
+    <p class="card-text">@ViewBag.CountProduct</p>
+
+
+  </div>
+  <a class="btn btn-cyan" asp-action="index">Go To Back</a>
+</div>
+</div>
+

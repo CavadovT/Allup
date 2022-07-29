@@ -1,24 +1,23 @@
-﻿using Allup.Models;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Allup.ViewModels
 {
-    public class CategoryVM
+    public class CategoryVM<T>
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        
-        public string ImgUrl { get; set; }
+        public List<T> Items { get; set; }
+        public List<T> SubItems { get; set; }
+        public int PageCount { get; set; }
+        public int PageCountSub { get; set; }
+        public int CurrentPage { get; set; }
 
-        public IFormFile Photo { get; set; }
+        public CategoryVM(List<T> items, List<T> subitem, int pageCount,int pageCountSub, int currentPage)
+        {
+            Items = items;
+            SubItems = subitem;
+            PageCount = pageCount;
+            CurrentPage = currentPage;
+            PageCountSub= pageCountSub;
 
-        public Nullable<int> ParentId { get; set; }
-        public string ParentName { get; set; }
-        public List<string> AllParent { get; set; }
-        public List<string> ChildNames { get; set; }
-        public List<string> AllChildNames { get; set; }
-
+        }
     }
 }

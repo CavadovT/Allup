@@ -11,6 +11,7 @@ namespace Allup.Models
         public bool IsBestSeller { get; set; }
         public bool IsNewArrivel { get; set; }
         public double Price { get; set; }
+        public bool IsDelete { get; set; }
         public Nullable<double> DiscountPrice { get; set; }
         public Nullable<double> TaxPercent { get; set; }
 
