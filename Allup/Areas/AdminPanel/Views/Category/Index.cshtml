@@ -1,108 +1,138 @@
-﻿@model List<Category>
+﻿@model PaginationVM<Category>
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/AdminPanel/Views/Shared/_AdminLayout.cshtml";
-    int count = 0;
-    int subcount = 0;
+    int count = (Model.CurrentPage-1)*5;
+    int subcount = (Model.CurrentPage-1)*5;
 }
 
  <div class="row">
-                    <div class="col-sm-12">
-                        <div class="white-box">
-                            <h3 class="box-title">Category Table</h3>
-                           <a class="btn btn-warning" asp-action="create">Add Category</a>
-                            <div class="table-responsive">
-                                <table class="table text-wrap">
-                                    <thead>
-                                        <tr>
-                                            <th class="border-top-0">No</th>
-                                            <th class="border-top-0">Name</th>
-                                            <th class="border-top-0">ImgUrl</th>
-                                            <th class="border-top-0">SettingsCategory</th> 
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var item in Model)
-                                       {
-                                            if (item.ParentId == null)
-                                            {
-                                                count++;
-                                                  <tr>
-                                                      <td>@count</td>
-                                                      <td>@item.Name</td>
-                                          
-                                                      <td>
-                                                          <img width="50" src="~/assets/images/@item.ImgUrl"/>
-                                                      </td>
-                                                      <td class="text-nowrap">
+      <div class="col-sm-12">
+          <div class="white-box">
+              <h3 class="box-title">Category Table</h3>
+             <a class="btn btn-warning" asp-action="create">Add Category</a>
+             <a class="btn btn-warning" asp-action="createsub">Add SubCategory</a>
 
-                                                          <a  class="mx-2 btn btn-secondary " asp-action="update" asp-route-id="@item.Id"><i  class="fas fa-database"></i></a>
-                                                          <a class="mx-2 btn btn-primary " asp-action="detail" asp-route-id="@item.Id"><i class="fas fa-info-circle"></i></a>
-                                                          <a class="mx-2 btn btn-danger " asp-action="delete" asp-route-id="@item.Id"><i class="fas fa-trash"></i></a>
-                                                      </td>
-                                              
-                                                </tr>
-                                            }
-                                            else
-                                            {
-                                                break;
+              <div class="table-responsive">
+                  <table class="table text-wrap">
+                      <thead>
+                          <tr>
+                              <th class="border-top-0">No</th>
+                              <th class="border-top-0">Name</th>
+                              <th class="border-top-0">ImgUrl</th>
+                              <th class="border-top-0">SettingsCategory</th> 
+                          </tr>
+                      </thead>
+                      <tbody>
+                          @foreach (var item in Model.Items)
+                         {
+                             count++;
+                               <tr>
+                                   <td>@count</td>
+                                   <td>@item.Name</td>
+                          
+                                   <td>
+                                       <img width="50" src="~/assets/images/@item.ImgUrl"/>
+                                   </td>
+                                   <td class="text-nowrap">
 
-                                            }
-                                        }
-                                         
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                 <div class="row">
-                    <div class="col-sm-12">
-                        <div class="white-box">
-                            <h3 class="box-title">Sub Category</h3>
-                           <a class="btn btn-warning" asp-action="subcreat">Create Sub Category</a>
-                            <div class="table-responsive">
-                                <table class="table text-wrap">
-                                    <thead>
-                                        <tr>
-                                            <th class="border-top-0">No</th>
-                                            <th class="border-top-0">Name</th>
-                                            <th class="border-top-0">ParentName</th>
-                                            <th class="border-top-0">SettingsCategory</th> 
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var sub in Model)
-                                       {
-                                            if (sub.ParentId != null)
-                                            {
-                                                subcount++;
-                                                  <tr>
-                                                      <td>@subcount</td>
-                                                      <td>@sub.Name</td>
-                                                      <td>@sub.Parent.Name</td>
-                                                      <td class="text-nowrap">
-
-                                                          <a  class="mx-2 btn btn-secondary " asp-action="update" asp-route-id="@sub.Id"><i  class="fas fa-database"></i></a>
-                                                          <a class="mx-2 btn btn-primary " asp-action="detail" asp-route-id="@sub.Id"><i class="fas fa-info-circle"></i></a>
-                                                          <a class="mx-2 btn btn-danger " asp-action="delete" asp-route-id="@sub.Id"><i class="fas fa-trash"></i></a>
-                                                      </td>
-                                              
-                                                </tr>
-                                            }
-                                            @*else
-                                            {
-                                                break;
-
-                                            }*@
-                                        }
-                                         
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                                       <a  class="mx-2 btn btn-secondary " asp-action="update" asp-route-id="@item.Id"><i  class="fas fa-database"></i></a>
+                                       <a class="mx-2 btn btn-primary " asp-action="detail" asp-route-id="@item.Id"><i class="fas fa-info-circle"></i></a>
+                                       <a class="mx-2 btn btn-danger " asp-action="delete" asp-route-id="@item.Id"><i class="fas fa-trash"></i></a>
+                                   </td>
+                             </tr>
+                          }
+                           
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+      </div>
+       <div class="col-sm-12 d-flex justify-content-center">
+       <nav aria-label="...">
+          <ul class="pagination">
+              <li class="page-item @(Model.CurrentPage==1?"disabled":"")">
+                    <a class="page-link" asp-action="index" asp-route-page="@(ViewBag.Page-1)" tabindex="-1">Previous</a>
+                 </li>
+              @for (var i = 1; i <=Model.PageCount; i++)
+             {
+                  <li class="page-item @(Model.CurrentPage==i?"disabled":"")">
+                    <a class="page-link" asp-action="index" asp-route-page="@i" tabindex="-1">@i</a>
+                 </li>
+                 
+             }
+             <li class="page-item @(Model.CurrentPage==Model.PageCount?"disabled":"")">
+                    <a class="page-link" asp-action="index" asp-route-page="@(ViewBag.Page+1)" tabindex="-1">Next</a>
+                 </li>
+           
+           
+          </ul>
+       </nav>
+  </div>
+ </div>
+ 
+            
 
 
+ <div class="row">
+      <div class="col-sm-12">
+          <div class="white-box">
+              <h3 class="box-title">Sub Category</h3>
+             <a class="btn btn-warning" asp-action="subcreat">Create Sub Category</a>
+              <div class="table-responsive">
+                  <table class="table text-wrap">
+                      <thead>
+                          <tr>
+                              <th class="border-top-0">No</th>
+                              <th class="border-top-0">Name</th>
+                              <th class="border-top-0">ParentName</th>
+                              <th class="border-top-0">SettingsCategory</th> 
+                          </tr>
+                      </thead>
+                      <tbody>
+                          @foreach (var sub in Model.SubItems)
+                         {
+                               subcount++;
+                                <tr>
+                                    <td>@subcount</td>
+                                    <td>@sub.Name</td>
+                                    <td>@sub.Parent.Name</td>
+                                    <td class="text-nowrap">
 
+                                        <a  class="mx-2 btn btn-secondary " asp-action="updatesub" asp-route-id="@sub.Id"><i  class="fas fa-database"></i></a>
+                                        <a class="mx-2 btn btn-primary " asp-action="detail" asp-route-id="@sub.Id"><i class="fas fa-info-circle"></i></a>
+                                        <a class="mx-2 btn btn-danger " asp-action="delete" asp-route-id="@sub.Id"><i class="fas fa-trash"></i></a>
+                                    </td>
+                            
+                              </tr>
+                             
+                          }
+                           
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+      </div>
+      <div class="col-sm-12 d-flex justify-content-center">
+       <nav aria-label="...">
+          <ul class="pagination">
+              <li class="page-item @(Model.CurrentPage==1?"disabled":"")">
+                    <a class="page-link" asp-action="index" asp-route-page="@(ViewBag.Page-1)" tabindex="-1">Previous</a>
+                 </li>
+              @for (var i = 1; i <=Model.PageCountSub; i++)
+             {
+                  <li class="page-item @(Model.CurrentPage==i?"disabled":"")">
+                    <a class="page-link" asp-action="index" asp-route-page="@i" tabindex="-1">@i</a>
+                 </li>
+                 
+             }
+             <li class="page-item @(Model.CurrentPage==Model.PageCountSub?"disabled":"")">
+                    <a class="page-link" asp-action="index" asp-route-page="@(ViewBag.Page+1)" tabindex="-1">Next</a>
+                 </li>
+           
+           
+          </ul>
+       </nav>
+  </div>
+ </div>
+  

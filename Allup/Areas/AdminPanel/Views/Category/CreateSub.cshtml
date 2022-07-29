@@ -1,30 +1,30 @@
 ﻿@model Category 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "CreateSub";
     Layout = "~/Areas/AdminPanel/Views/Shared/_AdminLayout.cshtml";
 }
 
 
-
 <div class="row">
-    <h1>Category Creat</h1>
+    <h1>Sub Category Create</h1>
   
    <div class="row">
    
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" >
               <div class="form-group">
                  <label asp-for="Name" ></label>
                  <input asp-for="Name"  class="form-control"  placeholder="Enter Name">
                  <span class="text-danger" asp-validation-for="Name"></span>
               </div>
               
-               <div class="form-group">
-                 <label asp-for="Photo" ></label>
-                 <input asp-for="Photo" id="Photo" class="form-control"   placeholder="Choose Photo">
-                 <span class="text-danger" asp-validation-for="Photo"></span>
-              </div>
+               <select asp-for="Id" asp-items="@ViewBag.MainCategories" class="form-select" aria-label="Default select example">
+                 
+                  <option selected>Select the Main Category</option>
+             
+                </select>
 
               <button type="submit" class="btn btn-success">Submit</button>
              <a class="btn btn-dark" asp-action="Index">Go Back</a>
         </form>
 </div>
+
