@@ -157,21 +157,21 @@ namespace Allup.Areas.AdminPanel.Controllers
                 ModelState.AddModelError("Name", "Category Name Cannot be Empty!");
                 return View();
             }
-            bool existCategoryName =await _context.Categories.Where(c => c.IsDeleted != true).Where(c => c.ParentId == null).AnyAsync(c => c.Name.ToLower().Trim() == subCategory.Name.ToLower().Trim());
+            bool existCategoryName =await _context.Categories.Where(c => c.IsDeleted != true).AnyAsync(c => c.Name.ToLower().Trim() == subCategory.Name.ToLower().Trim());
             if (existCategoryName)
             {
-                ModelState.AddModelError("Name", "The name of category is main category exist");
+                ModelState.AddModelError("Name", "The name of category alredy exist");
                 return View();
             }
 
-            bool ExistSubCategoryName = await _context.Categories.Where(c=>c.IsDeleted==false).Where(c => c.ParentId == subCategory.Id).AnyAsync(c => c.Name.ToLower().Trim() == subCategory.Name.ToLower().Trim());
+            //bool ExistSubCategoryName = await _context.Categories.Where(c=>c.IsDeleted==false).Where(c => c.ParentId == subCategory.Id).AnyAsync(c => c.Name.ToLower().Trim() == subCategory.Name.ToLower().Trim());
 
-            if (ExistSubCategoryName)
-            {
-                ModelState.AddModelError("Name", "The name of subcategory alredy exsist in this main category!!!");
-                return View();
-            }
-
+            //if (ExistSubCategoryName)
+            //{
+            //    ModelState.AddModelError("Name", "The name of subcategory alredy exsist in this main category!!!");
+            //    return View();
+            //}
+            //umuiyen eyni adl kategory yaratmasin
 
             Category newsubcat = new Category();
             newsubcat.Name = subCategory.Name;
@@ -209,7 +209,7 @@ namespace Allup.Areas.AdminPanel.Controllers
             {
                 return View();
             }
-            Category dbCategory = _context.Categories.FirstOrDefault(c => c.Id == category.Id);
+            Category dbCategory = _context.Categories.Where(c=>c.IsDeleted==false).FirstOrDefault(c => c.Id == category.Id);
             if (dbCategory == null)
             {
                 return View();
@@ -285,6 +285,7 @@ namespace Allup.Areas.AdminPanel.Controllers
             ViewBag.subid = subid;
             if (!ModelState.IsValid)
             {
+                ModelState.AddModelError("", "error");
                 return View();
             }
             Category dbCategorySub = _context.Categories.FirstOrDefault(c => c.Id == subid);
@@ -292,17 +293,23 @@ namespace Allup.Areas.AdminPanel.Controllers
             {
                 return View();
             }
-            bool categoriesinmainsub = await _context.Categories.Where(c => c.IsDeleted == false).Where(c => c.ParentId == subcategory.Id).AnyAsync(c=>c.Name.Trim().ToLower() == subcategory.Name.Trim().ToLower());
-            
-            if (categoriesinmainsub)
+            else 
             {
-                ModelState.AddModelError("Name", "The name of subcategory alredy exsist at main cat!!!");
-                return View();
+                Category dbCategoryName = await _context.Categories.Where(c => c.IsDeleted == false).FirstOrDefaultAsync(p => p.Name.Trim().ToLower() == subcategory.Name.Trim().ToLower());
+                if (dbCategoryName != null)
+                {
+                    if (dbCategoryName.Name.Trim().ToLower() != dbCategorySub.Name.Trim().ToLower())
+                    {
+                        ModelState.AddModelError("Name", "with this name product allready exist!!!");
+                        return View();
+                    }
+                }
+                dbCategorySub.ParentId = subcategory.Id;
+                dbCategorySub.UpdatedAt = DateTime.Now;
+                dbCategorySub.Name = subcategory.Name;
+                await _context.SaveChangesAsync();
             }
-            dbCategorySub.ParentId = subcategory.Id;
-            dbCategorySub.UpdatedAt = DateTime.Now;
-            dbCategorySub.Name = subcategory.Name;
-            await _context.SaveChangesAsync();
+           
             return RedirectToAction("index");
         }
 

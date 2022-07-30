@@ -89,16 +89,16 @@ namespace Allup.Areas.AdminPanel.Controllers
             ViewBag.Tags = new SelectList(await _context.Tags.ToListAsync(), "Id", "Name");
             if (!ModelState.IsValid)
             {
-                var errors = ModelState.Values.SelectMany(errors=>errors.Errors);
+                var errors = ModelState.Values.SelectMany(errors => errors.Errors);
                 foreach (var item in errors)
                 {
                     ModelState.AddModelError("", item.ErrorMessage);
 
                 }
                 return View();
-                
+
             }
-            if (product.Photos==null)
+            if (product.Photos == null)
             {
                 ModelState.AddModelError("Photos", "Please chose the photo");
                 return View();
@@ -128,7 +128,7 @@ namespace Allup.Areas.AdminPanel.Controllers
                 {
                     image.IsMain = true;
                 }
-                else 
+                else
                 {
                     for (int i = 0; i < images.Count; i++)
                     {
@@ -159,7 +159,7 @@ namespace Allup.Areas.AdminPanel.Controllers
             {
                 newProduct.DiscountPrice = product.Price - (product.Price * product.DiscountPercent / 100);
             }
-            else 
+            else
             {
                 newProduct.DiscountPrice = product.Price;
             }
@@ -189,7 +189,7 @@ namespace Allup.Areas.AdminPanel.Controllers
             Product dbProd = await _context.Products.FirstOrDefaultAsync(b => b.Id == id);
             if (dbProd == null) return NotFound();
 
-            foreach (var img in await _context.ProductImages.Where(i => i.ProductId == id).Where(i=>i.IsMain==false).ToListAsync())
+            foreach (var img in await _context.ProductImages.Where(i => i.ProductId == id).Where(i => i.IsMain == false).ToListAsync())
             {
                 string path = Path.Combine(_env.WebRootPath, "assets/images/product", img.ImgUrl);
 
@@ -207,22 +207,187 @@ namespace Allup.Areas.AdminPanel.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<IActionResult> Detail(int? id) 
+        public async Task<IActionResult> Detail(int? id)
         {
             if (id == null) return NotFound();
             Product dbProd = await _context.Products
                 .Where(p => p.IsDelete == false)
                 .Include(p => p.Category)
                 .Include(p => p.Brand)
-                .Include(p=>p.TagProducts)
-                .ThenInclude(tp=>tp.Tag)
+                .Include(p => p.TagProducts)
+                .ThenInclude(tp => tp.Tag)
                 .FirstOrDefaultAsync(c => c.Id == id);
-            ViewBag.Img=(await _context.ProductImages.Where(i=>i.ProductId==id).Where(i=>i.IsMain==true).FirstOrDefaultAsync()).ImgUrl;
-           
+            ViewBag.Img = (await _context.ProductImages.Where(i => i.ProductId == id).Where(i => i.IsMain == true).FirstOrDefaultAsync()).ImgUrl;
+
             if (dbProd == null) return NotFound();
-            
+
             return View(dbProd);
-          
         }
+
+        public async Task<IActionResult> Update(int? id)
+        {
+            if (id == null) return NotFound();
+            Product dbProd = await _context.Products
+                .Where(p => p.IsDelete == false)
+                .Include(p => p.Category)
+                .Include(p => p.Brand)
+                .Include(p => p.ProductImages)
+                .Include(p => p.TagProducts)
+                .ThenInclude(tp => tp.Tag)
+                .FirstOrDefaultAsync(c => c.Id == id);
+             
+            ViewBag.Categories = new SelectList(await _context.Categories.Where(c => c.IsDeleted == false).Where(c => c.ParentId != null).ToListAsync(), "Id", "Name");
+            ViewBag.Brands = new SelectList(await _context.Brands.Where(b => b.IsDeleted == false).ToListAsync(), "Id", "Name");
+            ViewBag.Tags = new SelectList(await _context.Tags.ToListAsync(), "Id", "Name");
+            List<Tag> tags = await _context.Tags.ToListAsync();
+            List<string> tagNames = new List<string>();
+
+            foreach (var item in dbProd.TagProducts)
+            {
+                tagNames.Add(item.Tag.Name);
+            }
+            dbProd.TagNames=tagNames;
+            dbProd.Tags = tags;
+            return View(dbProd);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(Product product,List<int> TgIdss)
+        {
+            Product dbProduct = _context.Products
+              .Include(p => p.ProductImages)
+              .Include(p => p.Category)
+              .Include(p => p.Brand)
+              .Include(p => p.TagProducts)
+              .ThenInclude(p => p.Tag)
+              .FirstOrDefault(c => c.Id == product.Id);
+            ViewBag.Categories = new SelectList(await _context.Categories.Where(c => c.IsDeleted == false).Where(c => c.ParentId != null).ToListAsync(), "Id", "Name");
+            ViewBag.Brands = new SelectList(await _context.Brands.Where(b => b.IsDeleted == false).ToListAsync(), "Id", "Name");
+
+            List<Tag> tags = await _context.Tags.ToListAsync();
+            List<string> tagNames = new List<string>();
+
+            foreach (var item in dbProduct.TagProducts)
+            {
+                tagNames.Add(item.Tag.Name);
+            }
+            dbProduct.TagNames = tagNames;
+            dbProduct.Tags = tags;
+
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(errors => errors.Errors);
+                foreach (var item in errors)
+                {
+                    ModelState.AddModelError("", item.ErrorMessage);
+
+                }
+                return View(dbProduct);
+            }
+
+            if (dbProduct == null)
+            {
+                return View(dbProduct);
+            }
+            else
+            {
+                if (product.DiscountPercent != null)
+                {
+                    dbProduct.DiscountPrice = product.Price - (product.Price * product.DiscountPercent / 100);
+                }
+                else
+                {
+                    dbProduct.DiscountPrice = product.Price;
+                }
+
+                if (product.Photos == null)
+                {
+                    dbProduct.ProductImages=dbProduct.ProductImages;
+                }
+                else
+                {
+                    foreach (var item in dbProduct.ProductImages)
+                    {
+                        string oldPhoto = item.ImgUrl;
+                        string path = Path.Combine(_env.WebRootPath, "assets/images/product", oldPhoto);
+
+                        Helper.DeleteImage(path);
+                    }
+
+                    List<ProductImage> images = new List<ProductImage>();
+
+                    foreach (var img in product.Photos)
+                    {
+                        if (img == null)
+                        {
+                            ModelState.AddModelError("Photos", "don't leave it blank!!!");
+                            return View(dbProduct);
+                        }
+                        if (!img.IsImage())
+                        {
+                            ModelState.AddModelError("Photos", "Choose the photo");
+                            return View(dbProduct);
+                        }
+                        if (img.ValidSize(200))
+                        {
+                            ModelState.AddModelError("Photos", "oversize");
+                            return View(dbProduct);
+                        }
+                        ProductImage image = new ProductImage();
+                        
+                        image.ImgUrl = img.SaveImage(_env, "assets/images/product");
+                        if (product.Photos.Count == 1)
+                        {
+                            image.IsMain = true;
+                        }
+                        else
+                        {
+                            for (int i = 0; i < images.Count; i++)
+                            {
+                                images[0].IsMain = true;
+                            }
+                        }
+                        images.Add(image);
+                    }
+                    dbProduct.ProductImages=images;
+                }
+                List<TagProducts> newtagProducts = new List<TagProducts>();
+                foreach (var tagId in TgIdss)
+                {
+                    TagProducts newtagProduct = new TagProducts();
+                    newtagProduct.ProductId = product.Id;
+                    newtagProduct.TagId = tagId;
+                    newtagProducts.Add(newtagProduct);
+                }
+                Product dbProductName = _context.Products.FirstOrDefault(c => c.Name.Trim().ToLower() == product.Name.Trim().ToLower());
+
+                if (dbProductName != null)
+                {
+                    if (dbProductName.Name.Trim().ToLower() != dbProduct.Name.Trim().ToLower())
+                    {
+                        ModelState.AddModelError("Name", "with this name category allready exist");
+                        return View(dbProduct);
+                    }
+                }
+               
+                dbProduct.Name = product.Name;
+                dbProduct.Price = product.Price;
+                dbProduct.Description = product.Description;
+                dbProduct.Count = product.Count;
+                dbProduct.TaxPercent = product.TaxPercent;
+                dbProduct.DiscountPercent = product.DiscountPercent;
+                dbProduct.CategoryId = product.CategoryId;
+                dbProduct.BrandId = product.BrandId;
+                dbProduct.IsBestSeller = product.IsBestSeller;
+                dbProduct.IsFeatured = product.IsFeatured;
+                dbProduct.IsNewArrivel = product.IsNewArrivel;
+                dbProduct.TagProducts = newtagProducts;
+                dbProduct.UpdatedAt=DateTime.Now;
+                _context.SaveChanges();
+                
+            }
+            return RedirectToAction("index");
+        }
+
     }
 }

@@ -11,7 +11,7 @@
       <div class="form-group">
         @foreach (var item in Model.Roles)
        {
-         <input name="roles" value="@item.ToString()" class="form-check-input" type="checkbox" @(Model.UserRoles.Contains(item.ToString())?"checked=\"checked\"":"")>@item <br />
+         <input name="roles" value="@item.Id" class="form-check-input" type="checkbox" @(Model.UserRoles.Contains(item.ToString())?"checked=\"checked\"":"")>@item <br />
            
        }
          

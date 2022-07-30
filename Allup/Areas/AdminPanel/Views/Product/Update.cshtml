@@ -1,6 +1,6 @@
 ﻿@model Product
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Update";
     Layout = "~/Areas/AdminPanel/Views/Shared/_AdminLayout.cshtml";
 }
 
@@ -44,44 +44,50 @@
                  <span class="text-danger" asp-validation-for="DiscountPercent"></span>
               </div>
 
-                <input name="isfeature" type="checkbox"  class="form-check-input" value="true"  >
-                <label for="isfeature" class="form-check-label">IsFeatured</label><br />
+              <div class="form-group">
+                <label asp-for="IsFeatured"></label>
+                <input asp-for="IsFeatured" type="checkbox"   class="form-check-input check" ><br />
+                <span asp-validation-for="IsFeatured" class="text-danger"></span>
+              </div>
 
-                <input name="isfeature" type="hidden"  class="form-check-input" value="false"  >
-                
-                <input name="isfeature" type="checkbox"  class="form-check-input" value="true"  >
-                <label for="isnew" class="form-check-label">IsNewArrivel</label><br />
+              <div class="form-group">
+               
+                <input asp-for="IsNewArrivel"  type="checkbox"  class="form-check-input check"  ><br />
+                <label asp-for="IsNewArrivel"></label>
+                <span asp-validation-for="IsNewArrivel" class="text-danger"></span>
+              </div>
 
-                <input name="isfeature" type="hidden"  class="form-check-input" value="false"  >
+              <div class="form-group">
+                <input asp-for="IsBestSeller" type="checkbox"  class="form-check-input check"   ><br />
+                <label asp-for="IsBestSeller"></label>
+                <span asp-validation-for="IsBestSeller" class="text-danger"></span>
+              </div>
 
-                <input name="isbest" type="checkbox"  class="form-check-input" value="true"  >
-                <label for="isbest" class="form-check-label">IsBestSeller</label><br />
-
-                <input name="isbest" type="hidden"  class="form-check-input" value="false"  >
-                 
-              
-
-              <select asp-for="CategoryId" asp-items="@ViewBag.Categories" class="form-select" aria-label="Default select example">
+              <select asp-for="CategoryId" asp-items="@ViewBag.Categories"  class="form-select select1" >
                  
                   <option selected>Select the Category</option>
-             
+                  
                 </select>
+             <span class="text-danger" asp-validation-for="CategoryId"></span>
+
                 <br />
-                 <select asp-for="BrandId" asp-items="@ViewBag.Brands" class="form-select" aria-label="Default select example">
+                 <select asp-for="BrandId" asp-items="@ViewBag.Brands" class="form-select " >
                  
                   <option selected>Select the Brand</option>
              
                 </select>
+                 <span class="text-danger" asp-validation-for="BrandId"></span>
+
+                <br />
+               
+                @foreach (var item in Model.Tags)
+                   {
+                     <input name="TgIdss" id="TgIdss" value="@item.Id" class="form-check-input" type="checkbox" @(Model.TagNames.Contains(item.Name)?"checked=\"checked\"":"")>@item.Name <br />
+                     <label for="TgIdss"></label>
+                   }
                 <br />
 
-                <select asp-for="TagIds" asp-items="@ViewBag.Tags"  class="form-select-lg" multiple >
-                 
-                  <option selected>Select the Tags</option>
-             
-                </select>
-                <br />
-                <br />
-
+                
                 <div class="form-group">
                  <label asp-for="Photos" ></label>
                  <input asp-for="Photos"  class="form-control"   placeholder="Choose Photo">
@@ -91,9 +97,6 @@
               <button type="submit" class="btn btn-success">Submit</button>
              <a class="btn btn-dark" asp-action="Index">Go Back</a>
         </form>
+       
 </div>
-@section scripts
-{
-    <partial name="_ValidationPartial"></partial>
-}
 

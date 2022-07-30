@@ -11,10 +11,12 @@ namespace Allup.Models
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
+      
         public string Description { get; set; }
         public bool IsFeatured { get; set; }
         public bool IsBestSeller { get; set; }
         public bool IsNewArrivel { get; set; }
+        [Required]
         public double Price { get; set; }
         public bool IsDelete { get; set; }
         public Nullable<double> DiscountPrice { get; set; }
@@ -42,6 +44,11 @@ namespace Allup.Models
         public List<IFormFile> Photos { get; set; }
         [NotMapped]
         public List<int> TagIds { get; set; }
+        [NotMapped]
+        public List<string> TagNames { get; set; }
+        [NotMapped]
+        public List<Tag> Tags { get; set; }
+
 
     }
 }
