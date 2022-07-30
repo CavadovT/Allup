@@ -1,8 +1,100 @@
-﻿
+﻿@model PaginationVM<Product>
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/AdminPanel/Views/Shared/_AdminLayout.cshtml";
+    int count = (Model.CurrentPage-1)*5;
+
 }
 
-<h1>Index</h1>
 
+ <div class="row">
+                    <div class="col-sm-12">
+                        <div class="white-box">
+                            <h3 class="box-title">Product Table</h3>
+                           <a class="btn btn-warning" asp-action="create">Add Product</a>
+                            <div class="table-responsive">
+                                <table class="table text-wrap">
+                                    <thead>
+                                        <tr>
+                                            <th class="border-top-0">No</th>
+                                            <th class="border-top-0">Image</th>
+                                            <th class="border-top-0">Name</th>
+                                            <th class="border-top-0">Price</th>
+                                            <th class="border-top-0">Count InStocke</th>
+                                            <th class="border-top-0">DiscountPercent</th>
+                                            <th class="border-top-0">DiscountPrice</th>
+                                            <th class="border-top-0">TaxPercent</th>
+                                           
+                                            <th class="border-top-0">CategoryName</th>
+                                            <th class="border-top-0">BrandName</th>
+                                            
+
+                                            <th class="border-top-0">Settings</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.Items)
+                                       {
+                                           count++;
+                                            <tr>
+                                            <td>@count</td>
+                                            <td>
+                                            @foreach (var img in item.ProductImages)
+                                           {
+                                               if (img.IsMain)
+                                               {
+                                               
+                                                <img width="50" src="~/assets/images/product/@img.ImgUrl"/>
+                                                
+                                               }
+                                               
+                                           }
+                                           </td>
+                                            
+                                            <td>@item.Name</td>
+                                            <td>@item.Price</td>
+                                            <td>@item.Count</td>
+                                            <td>@item.DiscountPercent</td>
+                                            <td>@item.DiscountPrice</td>
+                                            <td>@item.TaxPercent</td>
+                                            
+                                          
+                                             <td>@item.Category.Name</td>
+                                            <td>@item.Brand.Name</td>
+                                            <td class="text-nowrap">
+
+                                                <a  class="mx-2 btn btn-secondary " asp-action="update" asp-route-id="@item.Id"><i  class="fas fa-database"></i></a>
+                                                <a class="mx-2 btn btn-primary " asp-action="detail" asp-route-id="@item.Id"><i class="fas fa-info-circle"></i></a>
+                                                <a class="mx-2 btn btn-danger " asp-action="delete" asp-route-id="@item.Id"><i class="fas fa-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                       }
+                                       
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+  </div>
+  <div class="col-12 d-flex justify-content-center">
+       <nav aria-label="...">
+          <ul class="pagination">
+              <li class="page-item @(Model.CurrentPage==1?"disabled":"")">
+                    <a class="page-link" asp-action="index" asp-route-page="@(ViewBag.Page-1)" tabindex="-1">Previous</a>
+                 </li>
+              @for (var i = 1; i <=Model.PageCount; i++)
+             {
+                  <li class="page-item @(Model.CurrentPage==i?"disabled":"")">
+                    <a class="page-link" asp-action="index" asp-route-page="@i" tabindex="-1">@i</a>
+                 </li>
+                 
+             }
+             <li class="page-item @(Model.CurrentPage==Model.PageCount?"disabled":"")">
+                    <a class="page-link" asp-action="index" asp-route-page="@(ViewBag.Page+1)" tabindex="-1">Next</a>
+                 </li>
+           
+           
+          </ul>
+       </nav>
+  </div>
