@@ -1,0 +1,8 @@
+﻿@model Subscriber
+ <div class="newsletter-forn">
+    <form method="post">
+        <input asp-for="Email" type="email" placeholder="Your Email address">
+        <span asp-validation-for="Email"></span>
+        <button asp-controller="subscribe" asp-action="Add" type="submit" class="main-btn">Subscribe</button>
+    </form>
+ </div>

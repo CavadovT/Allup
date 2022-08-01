@@ -94,13 +94,13 @@ namespace Allup.Areas.AdminPanel.Controllers
 
             if (category.Name == null)
             {
-                ModelState.AddModelError("Name", "Category Name Cannot be Empty!");
+                ModelState.AddModelError("Name", "name of Category can't be empty!");
                 return View();
             }
             bool existCategoryName = _context.Categories.Where(c => c.IsDeleted != true).Any(c => c.Name.ToLower().Trim() == category.Name.ToLower().Trim());
             if (existCategoryName)
             {
-                ModelState.AddModelError("Name", "The name of category is exist");
+                ModelState.AddModelError("Name", "This category is already exist");
                 return View();
             }
 
@@ -154,13 +154,13 @@ namespace Allup.Areas.AdminPanel.Controllers
             ViewBag.MainCategories = new SelectList(await _context.Categories.Where(c => c.ParentId == null).ToListAsync(), "Id", "Name");
             if (subCategory.Name == null)
             {
-                ModelState.AddModelError("Name", "Category Name Cannot be Empty!");
+                ModelState.AddModelError("Name", "name of Category can't be empty!");
                 return View();
             }
             bool existCategoryName =await _context.Categories.Where(c => c.IsDeleted != true).AnyAsync(c => c.Name.ToLower().Trim() == subCategory.Name.ToLower().Trim());
             if (existCategoryName)
             {
-                ModelState.AddModelError("Name", "The name of category alredy exist");
+                ModelState.AddModelError("Name", "This category is already exist");
                 return View();
             }
 
@@ -222,7 +222,7 @@ namespace Allup.Areas.AdminPanel.Controllers
                 {
                     if (dbCategoryName.Name.Trim().ToLower() != dbCategory.Name.Trim().ToLower())
                     {
-                        ModelState.AddModelError("Name", "with this name category allready exist");
+                        ModelState.AddModelError("Name", "This category is already exist");
                         return View();
                     }
                 }
@@ -300,7 +300,7 @@ namespace Allup.Areas.AdminPanel.Controllers
                 {
                     if (dbCategoryName.Name.Trim().ToLower() != dbCategorySub.Name.Trim().ToLower())
                     {
-                        ModelState.AddModelError("Name", "with this name product allready exist!!!");
+                        ModelState.AddModelError("Name", "This product is already exist!!!");
                         return View();
                     }
                 }

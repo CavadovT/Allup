@@ -1,10 +1,14 @@
 ﻿using Allup.DAL;
+using Allup.Extentions;
+using Allup.Helpers;
 using Allup.Models;
 using Allup.ViewModels;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,10 +18,12 @@ namespace Allup.Areas.AdminPanel.Controllers
     public class BrandController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IWebHostEnvironment _env;
 
-        public BrandController(AppDbContext context)
+        public BrandController(AppDbContext context, IWebHostEnvironment environment)
         {
             _context = context;
+            _env = environment;
         }
         /// <summary>
         /// Read action for brand
@@ -68,15 +74,33 @@ namespace Allup.Areas.AdminPanel.Controllers
             bool ExistNameBrand =await _context.Brands.Where(b=>b.IsDeleted==false).AnyAsync(b => b.Name.Trim().ToLower() == brand.Name.Trim().ToLower());
             if (ExistNameBrand)
             {
-                ModelState.AddModelError("Name", "with this name brand allready exist");
+                ModelState.AddModelError("Name", "this brand is already exist");
                 return View();
             }
-
             Brand newBrand = new Brand
             {
                 Name = brand.Name,
                 CreatedAt = DateTime.Now,
             };
+            if (brand.Photo == null)
+            {
+                ModelState.AddModelError("Image", "Select Image");
+                return View();
+            }
+
+            if (!brand.Photo.IsImage())
+            {
+                ModelState.AddModelError("Image", "Only Image Files");
+                return View();
+            }
+            if (brand.Photo.ValidSize(1000))
+            {
+                ModelState.AddModelError("Image", "Oversize");
+                return View();
+            }
+            newBrand.ImgUrl = brand.Photo.SaveImage(_env, "assets/images/brand");
+
+            
 
             await _context.Brands.AddAsync(newBrand);
             await _context.SaveChangesAsync();
@@ -94,6 +118,11 @@ namespace Allup.Areas.AdminPanel.Controllers
             if (id == null) return NotFound();
             Brand brand = await _context.Brands.Where(b => b.IsDeleted == false).FirstOrDefaultAsync(b=>b.Id==id);
             if (brand == null) return NotFound();
+            
+            string path = Path.Combine(_env.WebRootPath, "assets/images/brand", brand.ImgUrl);
+
+            Helper.DeleteImage(path);
+           
             brand.IsDeleted = true;
             await _context.SaveChangesAsync();
             return RedirectToAction("index");
@@ -145,9 +174,33 @@ namespace Allup.Areas.AdminPanel.Controllers
                 {
                     if (dbBrandName.Name.Trim().ToLower() != dbbrand.Name.Trim().ToLower())
                     {
-                        ModelState.AddModelError("Name", "with this name category allready exist");
+                        ModelState.AddModelError("Name", "this category is already exist");
                         return View();
                     }
+                }
+                if (brand.Photo == null)
+                {
+                    dbbrand.ImgUrl = dbbrand.ImgUrl;
+                }
+                else
+                {
+                    if (!brand.Photo.IsImage())
+                    {
+                        ModelState.AddModelError("Photo", "Choose the photo");
+                        return View();
+                    }
+                    if (brand.Photo.ValidSize(200))
+                    {
+                        ModelState.AddModelError("Photo", "oversize");
+                        return View();
+                    }
+                    string oldPhoto = dbbrand.ImgUrl;
+                    string path = Path.Combine(_env.WebRootPath, "assets/images/brand", oldPhoto);
+
+                    Helper.DeleteImage(path);
+
+                    dbbrand.ImgUrl = brand.Photo.SaveImage(_env, "assets/images/brand");
+
                 }
                 dbbrand.Name = brand.Name;
                 dbbrand.UpdatedAt = DateTime.Now;

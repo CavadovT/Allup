@@ -1,4 +1,27 @@
-$(function() {
+let element = document.querySelector("#test");
+element.addEventListener("keyup", function () {
+    alert("salam");
+});
+$(document).ready(function () {
+    //Search
+
+    $(document).on('keyup', "#test", function () {
+        alert("qehbe");
+        let InputValue = $(this).val();
+        $("#searchList li").slice(1).remove();
+        $.ajax(
+            {
+                url: "home/search?search=" + InputValue,
+                method: "get",
+                success: function (res) {
+                    $("#searchList").append(res);
+                    console.log(res);
+                }
+            }
+        )
+    });
+});
+$(function () {
     
     "use strict";
     
@@ -8,7 +31,7 @@ $(function() {
         $('#preloader').delay(500).fadeOut(500);
     });
         
-    
+  
 
     //===== Sticky
     

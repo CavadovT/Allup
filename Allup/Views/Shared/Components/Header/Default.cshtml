@@ -11,8 +11,8 @@
                         </div>
                         <div class="header-menu-nav">
                             <ul class="menu-nav">
-                                <li><a href="compare.html"><i class="fal fa-repeat"></i> Compare (0)</a></li>
-                                <li><a href="wishlist.html"><i class="fal fa-heart"></i> Wishlist(0)</a></li>
+                                <li><a href="#"><i class="fal fa-repeat"></i> Compare (0)</a></li>
+                                <li><a href="#"><i class="fal fa-heart"></i> Wishlist(0)</a></li>
                                 <li>
                                     <div class="dropdown">
                                         <button type="button" id="setting" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Setting <i class="icon ion-chevron-down"></i></button>
@@ -97,73 +97,38 @@
                                                 
                                             </select>
                                         </div>
-                                        <input type="text" placeholder="Enter your search key ... ">
-                                        <button><i class="icon ion-android-search"></i></button>
+                                       
                                     </form>
+                                     <ul class="list-unstyled" id="searchList">
+                                        <li class="d-flex px-3">
+                                            <input  id="test" type="text" placeholder="Search">
+                                            
+                                        </li>
+                                       
+                                    </ul>
+                                    <button><i class="icon ion-android-search"></i></button>
                                 </div>
                                 <div class="header-cart">
                                     <div class="cart-btn">
-                                        <a href="#">
+                                        <a asp-controller="Basket" asp-action="showitem">
                                             <i class="icon ion-bag"></i>
                                             <span class="text">Cart :</span>
-                                            <span class="total">$@ViewBag.totalPrice</span>
+                                            <span class="total">€@ViewBag.totalPrice</span>
                                             <span class="count">@ViewBag.totalCount</span>
                                         </a>
                                     </div>
                                     <div class="mini-cart">
-                                        <ul class="cart-items">
-                                            <li>
-                                                <div class="single-cart-item d-flex">
-                                                    <div class="cart-item-thumb">
-                                                        <a href="single-product.html"><img src="~/assets/images/product-cart/cart-1.jpg" alt="product"></a>
-                                                        <span class="product-quantity">1x</span>
-                                                    </div>
-                                                    <div class="cart-item-content media-body">
-                                                        <h5 class="product-name"><a href="single-product.html">New Balance Fresh Foam LAZR</a></h5>
-                                                        <span class="product-price">€18.90</span>
-                                                        <span class="product-color"><strong>Color:</strong> White</span>
-                                                        <a href="#" class="product-close"><i class="fal fa-times"></i></a>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="single-cart-item d-flex">
-                                                    <div class="cart-item-thumb">
-                                                        <a href="single-product.html"><img src="~/assets/images/product-cart/cart-2.jpg" class="" alt="product"></a>
-                                                        <span class="product-quantity">3x</span>
-                                                    </div>
-                                                    <div class="cart-item-content media-body">
-                                                        <h5 class="product-name"><a href="single-product.html">New Balance Fresh Foam LAZR</a></h5>
-                                                        <span class="product-price">€18.90</span>
-                                                        <span class="product-color"><strong>Color:</strong> White</span>
-                                                        <a href="#" class="product-close"><i class="fal fa-times"></i></a>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
+                                       
                                         <div class="price_content">
-                                            <div class="cart-subtotals">
-                                                <div class="products price_inline">
-                                                    <span class="label">Subtotal</span>
-                                                    <span class="value">€30.80</span>
-                                                </div>
-                                                <div class="shipping price_inline">
-                                                    <span class="label">Shipping</span>
-                                                    <span class="value">€7.00</span>
-                                                </div>
-                                                <div class="tax price_inline">
-                                                    <span class="label">Taxes</span>
-                                                    <span class="value">€0.00</span>
-                                                </div>
-                                            </div>
+                                            
                                             <div class="cart-total price_inline">
                                                 <span class="label">Total</span>
-                                                <span class="value">€37.80</span>
+                                                <span class="value">€@ViewBag.totalPrice</span>
                                             </div>
                                         </div> <!-- price content -->
-                                        <div class="checkout text-center">
+                                        @*<div class="checkout text-center">
                                             <a href="checkout.html" class="main-btn">Checkout</a>
-                                        </div>
+                                        </div>*@
                                     </div> <!-- mini cart -->
                                 </div>
                             </div> <!-- header search cart -->
@@ -220,7 +185,7 @@
                                             <li><a asp-controller="about" asp-action="index">About</a></li>
                                             <li><a asp-controller="basket" asp-action="showitem">cart</a></li>
                                             <li><a asp-controller="order" asp-action="index" >Checkout</a></li>
-                                            <li><a asp-controller="product" asp-action="index">Compare</a></li>
+                                            <li><a asp-controller="basket" asp-action="showitem">Compare</a></li>
                                             <li><a asp-controller="basket" asp-action="showitem">Wishlist</a></li>
                                         @if (User.Identity.IsAuthenticated&&User.IsInRole("Admin"))
                                         {
@@ -236,45 +201,46 @@
                                     <li class="position-static"><a asp-controller="shop" asp-action="index">Shop <i class="fal fa-chevron-down"></i></a>
                                         <ul class="mega-sub-menu d-flex flex-wrap">
                                             <li>
-                                                <a class="menu-title" asp-controller="product" asp-action="index">Shop Grid</a>
+                                                <a class="menu-title" asp-controller="shop" asp-action="index">Shop Grid</a>
                                                 <ul class="submenu-item">
-                                                    <li><a asp-controller="product" asp-action="index">Shop Grid Column 3</a></li>
-                                                    <li><a asp-controller="product" asp-action="index">Shop Grid Column 4</a></li>
-                                                    <li><a asp-controller="product" asp-action="index">Shop Grid left sidebar</a></li>
-                                                    <li><a asp-controller="product" asp-action="index">Shop Grid Right sidebar</a></li>
+                                                    <li><a asp-controller="shop" asp-action="index">Shop Grid Column 3</a></li>
+                                                    <li><a asp-controller="shop" asp-action="index">Shop Grid Column 4</a></li>
+                                                    <li><a asp-controller="shop" asp-action="index">Shop Grid left sidebar</a></li>
+                                                    <li><a asp-controller="shop" asp-action="index">Shop Grid Right sidebar</a></li>
                                                 </ul>
                                             </li>
                                             <li>
-                                                <a class="menu-title" asp-controller="product" asp-action="index">Shop List</a>
+                                                <a class="menu-title" asp-controller="shop" asp-action="index">Shop List</a>
                                                 <ul class="submenu-item">
-                                                    <li><a asp-controller="product" asp-action="index">Shop List</a></li>
-                                                    <li><a asp-controller="product" asp-action="index">Shop List Left sidebar</a></li>
-                                                    <li><a asp-controller="product" asp-action="index">Shop List Right sidebar</a></li>
+                                                    <li><a asp-controller="shop" asp-action="index">Shop List</a></li>
+                                                    <li><a asp-controller="shop" asp-action="index">Shop List Left sidebar</a></li>
+                                                    <li><a asp-controller="shop" asp-action="index">Shop List Right sidebar</a></li>
                                                 </ul>
                                             </li>
                                             <li>
-                                                <a class="menu-title" asp-controller="product" asp-action="index">Shop Single</a>
+                                                <a class="menu-title" asp-controller="shop" asp-action="index">Shop Single</a>
                                                 <ul class="submenu-item">
-                                                    <li><a asp-controller="product" asp-action="index">Shop Single</a></li>
-                                                    <li><a asp-controller="product" asp-action="index">Shop Variable</a></li>
-                                                    <li><a asp-controller="product" asp-action="index">Shop Affiliate</a></li>
-                                                    <li><a asp-controller="product" asp-action="index">Shop Group</a></li>
-                                                    <li><a asp-controller="product" asp-action="index">Shop Tabs 2</a></li>
-                                                    <li><a asp-controller="product" asp-action="index">Shop Tabs 3</a></li>
+                                                    <li><a asp-controller="shop" asp-action="index">Shop Single</a></li>
+                                                    <li><a asp-controller="shop" asp-action="index">Shop Variable</a></li>
+                                                    <li><a asp-controller="shop" asp-action="index">Shop Affiliate</a></li>
+                                                    <li><a asp-controller="shop" asp-action="index">Shop Group</a></li>
+                                                    <li><a asp-controller="shop" asp-action="index">Shop Tabs 2</a></li>
+                                                    <li><a asp-controller="shop" asp-action="index">Shop Tabs 3</a></li>
                                                 </ul>
                                             </li>
                                             <li>
-                                                <a class="menu-title" asp-controller="product" asp-action="index">Shop Single</a>
+                                                <a class="menu-title" asp-controller="shop" asp-action="index">Shop Single</a>
                                                 <ul class="submenu-item">
-                                                    <li><a asp-controller="product" asp-action="index">Shop Slider</a></li>
-                                                    <li><a asp-controller="product" asp-action="index">Shop Gallery Left sidebar</a></li>
-                                                    <li><a asp-controller="product" asp-action="index">Shop Gallery Right sidebar</a></li>
-                                                    <li><a asp-controller="product" asp-action="index">Shop Sticky Left sidebar</a></li>
-                                                    <li><a asp-controller="product" asp-action="index">Shop Sticky Right sidebar</a></li>
+                                                    <li><a asp-controller="shop" asp-action="index">Shop Slider</a></li>
+                                                    <li><a asp-controller="shop" asp-action="index">Shop Gallery Left sidebar</a></li>
+                                                    <li><a asp-controller="shop" asp-action="index">Shop Gallery Right sidebar</a></li>
+                                                    <li><a asp-controller="shop" asp-action="index">Shop Sticky Left sidebar</a></li>
+                                                    <li><a asp-controller="shop" asp-action="index">Shop Sticky Right sidebar</a></li>
                                                 </ul>
                                             </li>
                                             <li class="custom-banner">
-                                                <a href="shop-4-column.html"><img src="assets/images/custom_banner.jpg" alt="" class="img-responsive"></a>
+                                               
+                                                <a asp-controller="shop" asp-action="index"><img src="~/assets/images/@Model.Banner.ImgUrl" alt="" class="img-responsive"></a>
                                             </li>
                                         </ul>
                                     </li>
@@ -303,29 +269,29 @@
                                                     </div>
                                                 </div>
                                                 <div class="custom-banner">
-                                                    <a href="shop-4-column.html"><img src="assets/images/custom_banner.jpg" alt="" class="img-responsive"></a>
+                                                    <a asp-controller="shop" asp-action="index"><img src="assets/images/custom_banner.jpg" alt="" class="img-responsive"></a>
                                                 </div>
                                             </li>
                                         </ul> <!--  mega sub menu -->
                                     </li>
-                                    <li><a href="#">Blog <i class="fal fa-chevron-down"></i></a>
+                                    <li><a asp-controller="blog" asp-action="index">Blog <i class="fal fa-chevron-down"></i></a>
                                         <ul class="sub-menu">
-                                            <li><a href="#">Blog Grid <i class="fal fa-chevron-right"></i></a>
+                                            <li><a asp-controller="blog" asp-action="index">Blog Grid <i class="fal fa-chevron-right"></i></a>
                                                 <ul class="sub-menu">
-                                                    <li><a href="blog-grid-left-sidebar.html">Blog Grid Left Slider</a></li>
-                                                    <li><a href="blog-grid-right-sidebar.html">Blog Grid Right Slider</a></li>
+                                                    <li><a asp-controller="Blog" asp-action="index">Blog Grid Left Slider</a></li>
+                                                    <li><a asp-controller="blog" asp-action="index"></a></li>
                                                 </ul>
                                             </li>
-                                            <li><a href="#">Blog List <i class="fal fa-chevron-right"></i></a>
+                                            <li><a asp-controller="blog" asp-action="index">Blog List <i class="fal fa-chevron-right"></i></a>
                                                 <ul class="sub-menu">
-                                                    <li><a href="blog-list-left-sidebar.html">Blog List Left Slider</a></li>
-                                                    <li><a href="blog-list-right-sidebar.html">Blog List Right Slider</a></li>
+                                                    <li><a asp-controller="blog" asp-action="index">Blog List Left Slider</a></li>
+                                                    <li><a asp-controller="blog" asp-action="index">Blog List Right Slider</a></li>
                                                 </ul>
                                             </li>
-                                            <li><a href="#">Blog Single <i class="fal fa-chevron-right"></i></a>
+                                            <li><a asp-controller="blog" asp-action="index">Blog Single <i class="fal fa-chevron-right"></i></a>
                                                 <ul class="sub-menu">
-                                                    <li><a href="blog-single-left-sidebar.html">Blog Single Left Slider</a></li>
-                                                    <li><a href="blog-single-right-sidebar.html">Blog Single Right Slider</a></li>
+                                                    <li><a asp-controller="blog" asp-action="index">Blog Single Left Slider</a></li>
+                                                    <li><a asp-controller="blog" asp-action="index">Blog Single Right Slider</a></li>
                                                 </ul>
                                             </li>
                                         </ul>
@@ -350,8 +316,8 @@
                         </div>
                         <div class="col-sm-4 col-5">
                             <div class="mobile-logo text-center">
-                                <a href="index.html">
-                                    <img src="~/assets/images/logo.png" alt="Logo">
+                                <a asp-action="index">
+                                    <img src="~/assets/images/@Model.Bio.Logo" alt="Logo">
                                 </a>
                             </div> <!-- mobile logo -->
                         </div>
@@ -569,11 +535,13 @@
                         </li>
                         <li>
                             <div class="dropdown dropdown-mobile menu-item-has-children">
-                                <button class="dm-toggle" type="button"><img src="~/assets/images/flag/1.jpg" alt=""> English <i class="icon ion-chevron-down"></i></button>
+                                <button class="dm-toggle" type="button"><img src="~/assets/images/flag/@Model.Languages." alt=""> English <i class="icon ion-chevron-down"></i></button>
 
                                 <ul class="dropdown-menu">
-                                    <li><a href="#"><img src="~/assets/images/flag/1.jpg" alt=""> English</a></li>
-                                    <li><a href="#"><img src="~/assets/images/flag/2.jpg" alt=""> Français</a></li>
+                                      @foreach (var lang in Model.Languages)
+                                           {
+                                            <li><a href="#"><img src="~/assets/images/flag/@lang.FlagUrl" alt=""> @lang.Name</a></li>   
+                                           }
                                 </ul>
                             </div>
                         </li>

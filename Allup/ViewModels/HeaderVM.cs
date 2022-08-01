@@ -8,5 +8,6 @@ namespace Allup.ViewModels
         public Bio Bio { get; set; }
         public List<Language> Languages { get; set; }
         public List<Category> Categories { get; set; }
+        public Banner Banner { get; set; }
     }
 }

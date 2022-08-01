@@ -11,7 +11,6 @@ namespace Allup.DAL
         {
         }
         public DbSet<Banner> Banners { get; set; }
-        public DbSet<BasketItem> BasketItems { get; set; }
         public DbSet<Bio> Bios { get; set; }
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<Brand> Brands { get; set; }
@@ -20,7 +19,7 @@ namespace Allup.DAL
         public DbSet<ContactUs> ContactUs { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<OrderProducts> OrderProducts { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<Slider> Sliders { get; set; }
@@ -30,6 +29,7 @@ namespace Allup.DAL
         public DbSet<TagProducts> TagProducts { get; set; }
         public DbSet<Testonominal> Testonominals { get; set; }
         public DbSet<SubscripeSection> SubscripeSections { get; set; }
+        public DbSet<FeatureBanner> FeatureBanners { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -39,6 +39,14 @@ namespace Allup.DAL
             new Testonominal { Id = 1, AuthorName = "John Doe", Content = "An has feugiat vivendum, ad vix tacimates accusamus, cum commune lucilius no. Sit at alia civibus indoctum, ea mel regione percipit adipisci. Per modus nostrum vituperata no, eam ne magna solum constituam.", ImgUrl = "author-1.png", Site = "email@yourwebsitename.com" },
             new Testonominal { Id = 2, AuthorName = "John Doe", Content = "An has feugiat vivendum, ad vix tacimates accusamus, cum commune lucilius no. Sit at alia civibus indoctum, ea mel regione percipit adipisci. Per modus nostrum vituperata no, eam ne magna solum constituam.", ImgUrl = "author-1.png", Site = "email@yourwebsitename.com" },
             new Testonominal { Id = 3, AuthorName = "John Doe", Content = "An has feugiat vivendum, ad vix tacimates accusamus, cum commune lucilius no. Sit at alia civibus indoctum, ea mel regione percipit adipisci. Per modus nostrum vituperata no, eam ne magna solum constituam.", ImgUrl = "author-1.png", Site = "email@yourwebsitename.com" }
+                );
+            builder.Entity<FeatureBanner>().HasData
+                (
+            new FeatureBanner { Id = 1, Title= "Free Shipping", Desc= "Free shipping on all US order", ImgUrl = "icon1.png", },
+            new FeatureBanner { Id = 2, Title = "Support 24/7", Desc = "Contact us 24 hours a day", ImgUrl = "icon2.png", },
+            new FeatureBanner { Id = 3, Title = "100% Money Back", Desc = "You have 30 days to Return", ImgUrl = "icon3.png", },
+            new FeatureBanner { Id = 4, Title = "90 Days Return", Desc = "If goods have problems", ImgUrl = "icon4.png", },
+            new FeatureBanner { Id = 5, Title = "Payment Secure", Desc = "We ensure secure payment", ImgUrl = "icon5.png", }
                 );
             builder.Entity<SubscripeSection>().HasData
                 (
@@ -111,10 +119,13 @@ namespace Allup.DAL
                 );
             builder.Entity<Brand>().HasData
                 (
-                new Brand { Id = 1, Name = "brand1", IsDeleted = false, CreatedAt = DateTime.Now },
-                new Brand { Id = 2, Name = "brand2", IsDeleted = false, CreatedAt = DateTime.Now },
-                new Brand { Id = 3, Name = "brand3", IsDeleted = false, CreatedAt = DateTime.Now },
-                new Brand { Id = 4, Name = "brand4", IsDeleted = false, CreatedAt = DateTime.Now }
+                new Brand { Id = 1, Name = "brand1", IsDeleted = false, CreatedAt = DateTime.Now,ImgUrl="brand-1.jpg" },
+                new Brand { Id = 2, Name = "brand2", IsDeleted = false, CreatedAt = DateTime.Now,ImgUrl="brand-2.jpg" },
+                new Brand { Id = 3, Name = "brand3", IsDeleted = false, CreatedAt = DateTime.Now ,ImgUrl="brand-3.jpg"},
+                new Brand { Id = 4, Name = "brand4", IsDeleted = false, CreatedAt = DateTime.Now,ImgUrl="brand-4.jpg" },
+                new Brand { Id = 5, Name = "brand5", IsDeleted = false, CreatedAt = DateTime.Now, ImgUrl = "brand-5.jpg" },
+                new Brand { Id = 6, Name = "brand6", IsDeleted = false, CreatedAt = DateTime.Now, ImgUrl = "brand-6.jpg" },
+                new Brand { Id = 7, Name = "brand7", IsDeleted = false, CreatedAt = DateTime.Now, ImgUrl = "brand-4.jpg" }
                 );
             builder.Entity<Language>().HasData
                 (
@@ -134,10 +145,10 @@ namespace Allup.DAL
                 );
             builder.Entity<Product>().HasData
                 (
-                new Product { Id = 1, Name = "Product1", IsBestSeller = true, IsNewArrivel = true, IsFeatured = false, Price = 50, Count = 5, CreatedAt = DateTime.Now, CategoryId = 7, BrandId = 1 },
-                new Product { Id = 2, Name = "Product2", IsBestSeller = true, IsNewArrivel = true, IsFeatured = false, Price = 55, Count = 3, CreatedAt = DateTime.Now, CategoryId = 8, BrandId = 2 },
-                new Product { Id = 3, Name = "Product3", IsBestSeller = false, IsNewArrivel = false, IsFeatured = true, Price = 65, Count = 5, CreatedAt = DateTime.Now, CategoryId = 9, BrandId = 3 },
-                new Product { Id = 4, Name = "Product4", IsBestSeller = false, IsNewArrivel = false, IsFeatured = true, Price = 75, Count = 6, CreatedAt = DateTime.Now, CategoryId = 10, BrandId = 4 }
+                new Product { Id = 1, Name = "Product1", IsBestSeller = true, IsNewArrivel = true, IsFeatured = false, Price = 50, Count = 5, CreatedAt = DateTime.Now, CategoryId = 7, BrandId = 1,Description="lorem ipsum" },
+                new Product { Id = 2, Name = "Product2", IsBestSeller = true, IsNewArrivel = true, IsFeatured = false, Price = 55, Count = 3, CreatedAt = DateTime.Now, CategoryId = 8, BrandId = 2,Description="lorem ipsum" },
+                new Product { Id = 3, Name = "Product3", IsBestSeller = false, IsNewArrivel = false, IsFeatured = true, Price = 65, Count = 5, CreatedAt = DateTime.Now, CategoryId = 9, BrandId = 3,Description="test" },
+                new Product { Id = 4, Name = "Product4", IsBestSeller = false, IsNewArrivel = false, IsFeatured = true, Price = 75, Count = 6, CreatedAt = DateTime.Now, CategoryId = 10, BrandId = 4 ,Description="lorem ipsum"}
                 );
             builder.Entity<TagProducts>().HasData
                 (

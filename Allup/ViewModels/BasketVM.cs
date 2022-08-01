@@ -3,7 +3,7 @@ using System;
 
 namespace Allup.ViewModels
 {
-    public class BasketItemVM
+    public class BasketVM
     {
         public int Id { get; set; }
         public string Name { get; set; }

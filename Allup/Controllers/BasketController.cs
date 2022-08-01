@@ -47,30 +47,41 @@ namespace Allup.Controllers
             }
             if (Id == null) return NotFound();
 
-            Product dbProd = await _context.Products.FindAsync(Id);
+            Product dbProd = await _context.Products
+                .Where(p=>p.IsDelete==false)
+                .Include(p=>p.ProductImages)
+                .Include(p=>p.Category)
+                .Include(p=>p.Brand)
+                .FirstOrDefaultAsync(p=>p.Id==Id);
 
             if (dbProd == null) return NotFound();
-            List<BasketItemVM> products;
+            List<BasketVM> products;
 
             string basket = Request.Cookies[$"{userName}basket"];
 
             if (basket == null)
             {
-                products = new List<BasketItemVM>();
+                products = new List<BasketVM>();
             }
             else
             {
-                products = JsonConvert.DeserializeObject<List<BasketItemVM>>(basket);
+                products = JsonConvert.DeserializeObject<List<BasketVM>>(basket);
             }
 
-            BasketItemVM IsExist = products.Find(p => p.Id == Id);
+            BasketVM IsExist = products.Find(p => p.Id == Id);
 
             if (IsExist == null)
             {
-                BasketItemVM prodVM = new BasketItemVM
+                BasketVM prodVM = new BasketVM
                 {
                     Id = dbProd.Id,
-                    ProductCount = 1
+                    ProductCount = 1,
+                    Price = dbProd.Price,
+                    Name = dbProd.Name,
+                    CategoryId = dbProd.CategoryId,
+                    BrandId = dbProd.BrandId,
+                    ImgUrl = (await _context.ProductImages.Where(i => i.IsMain == true).FirstOrDefaultAsync(i => i.ProductId == dbProd.Id)).ImgUrl,
+
                 };
                 products.Add(prodVM);
             }
@@ -79,8 +90,9 @@ namespace Allup.Controllers
                 IsExist.ProductCount++;
 
             }
+
             Response.Cookies.Append($"{userName}basket", JsonConvert.SerializeObject(products), new CookieOptions { MaxAge = TimeSpan.FromDays(3) });
-            return RedirectToAction("index", "product");
+            return RedirectToAction("index", "shop");
         }
         /// <summary>
         /// Show card action
@@ -94,11 +106,11 @@ namespace Allup.Controllers
             {
                 userName = User.Identity.Name;
             }
-            List<BasketItemVM> prods;
+            List<BasketVM> prods;
             string basket = Request.Cookies[$"{userName}basket"];
             if (basket != null)
             {
-                prods = JsonConvert.DeserializeObject<List<BasketItemVM>>(basket);
+                prods = JsonConvert.DeserializeObject<List<BasketVM>>(basket);
                 foreach (var item in prods)
                 {
                     Product dbProd = await _context.Products.FirstOrDefaultAsync(p => p.Id == item.Id);
@@ -112,7 +124,7 @@ namespace Allup.Controllers
             }
             else
             {
-                prods = new List<BasketItemVM>();
+                prods = new List<BasketVM>();
             }
             return View(prods);
         }
@@ -131,10 +143,10 @@ namespace Allup.Controllers
 
             string basket = Request.Cookies[$"{userName}basket"];
 
-            List<BasketItemVM> prods = JsonConvert.DeserializeObject<List<BasketItemVM>>(basket);
+            List<BasketVM> prods = JsonConvert.DeserializeObject<List<BasketVM>>(basket);
 
 
-            BasketItemVM product = prods.Find(p => p.Id == id);
+            BasketVM product = prods.Find(p => p.Id == id);
             if (product.ProductCount > 1)
             {
                 product.ProductCount--;
@@ -162,10 +174,10 @@ namespace Allup.Controllers
             }
             string basket = Request.Cookies[$"{userName}basket"];
 
-            List<BasketItemVM> prods = JsonConvert.DeserializeObject<List<BasketItemVM>>(basket);
+            List<BasketVM> prods = JsonConvert.DeserializeObject<List<BasketVM>>(basket);
 
 
-            BasketItemVM product = prods.Find(p => p.Id == id);
+            BasketVM product = prods.Find(p => p.Id == id);
 
             product.ProductCount++;
 
@@ -188,10 +200,10 @@ namespace Allup.Controllers
             }
             string basket = Request.Cookies[$"{userName}basket"];
 
-            List<BasketItemVM> prods = JsonConvert.DeserializeObject<List<BasketItemVM>>(basket);
+            List<BasketVM> prods = JsonConvert.DeserializeObject<List<BasketVM>>(basket);
 
 
-            BasketItemVM product = prods.Find(p => p.Id == id);
+            BasketVM product = prods.Find(p => p.Id == id);
 
             prods.Remove(product);
 

@@ -38,7 +38,7 @@ namespace Allup.Areas.AdminPanel.Controllers
         public async Task<IActionResult> Create(string role)
         {
             int count = 0;
-            if (role == null) return Ok("Role don't Empty");
+            if (role == null) return Ok("Role can't be Empty");
 
             var roles = await _roleManager.Roles.ToListAsync();
             foreach (var item in roles)
@@ -48,7 +48,7 @@ namespace Allup.Areas.AdminPanel.Controllers
                     count++;
                 }
             }
-            if (count > 0) return Ok("Role is Alredy Exsist");
+            if (count > 0) return Ok("This Role is alredy Exist");
             var result = await _roleManager.CreateAsync(new IdentityRole { Name = role });
             return RedirectToAction("index");
         }

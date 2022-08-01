@@ -13,11 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
-    <Folder Include="Services\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\admin\plugins\bower_components\.DS_Store" />
     <None Include="wwwroot\admin\plugins\bower_components\chartist-plugin-tooltips\dist\chartist-plugin-tooltip.min.js" />
     <None Include="wwwroot\admin\plugins\bower_components\chartist\dist\chartist.min.js" />
@@ -69,6 +64,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
+    <PackageReference Include="MimeKit" Version="3.3.0" />
   </ItemGroup>
 
 </Project>

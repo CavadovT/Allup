@@ -88,6 +88,7 @@ namespace Allup.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: true),
+                    ImgUrl = table.Column<string>(nullable: true),
                     IsDeleted = table.Column<bool>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: true),
                     DeletedAt = table.Column<DateTime>(nullable: true),
@@ -139,6 +140,21 @@ namespace Allup.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ContactUs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FeatureBanners",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(nullable: true),
+                    Desc = table.Column<string>(nullable: true),
+                    ImgUrl = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FeatureBanners", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -347,6 +363,25 @@ namespace Allup.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Basket",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Basket", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Basket_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Orders",
                 columns: table => new
                 {
@@ -355,7 +390,11 @@ namespace Allup.Migrations
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     Address1 = table.Column<string>(nullable: true),
                     Address2 = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true),
+                    CompanyName = table.Column<string>(nullable: true),
+                    Countr = table.Column<string>(nullable: true),
+                    City = table.Column<string>(nullable: true),
+                    State = table.Column<string>(nullable: true),
+                    ZipCode = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -405,12 +444,15 @@ namespace Allup.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: false),
+                    Description = table.Column<string>(nullable: false),
                     IsFeatured = table.Column<bool>(nullable: false),
                     IsBestSeller = table.Column<bool>(nullable: false),
                     IsNewArrivel = table.Column<bool>(nullable: false),
                     Price = table.Column<double>(nullable: false),
+                    IsDelete = table.Column<bool>(nullable: false),
                     DiscountPrice = table.Column<double>(nullable: true),
+                    DiscountPercent = table.Column<double>(nullable: true),
                     TaxPercent = table.Column<double>(nullable: true),
                     Count = table.Column<int>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: true),
@@ -465,53 +507,51 @@ namespace Allup.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BasketItems",
+                name: "BasketProducts",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductId = table.Column<int>(nullable: false),
-                    UserId = table.Column<string>(nullable: true)
+                    BasketId = table.Column<int>(nullable: false),
+                    ProductId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BasketItems", x => x.Id);
+                    table.PrimaryKey("PK_BasketProducts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BasketItems_Products_ProductId",
+                        name: "FK_BasketProducts_Basket_BasketId",
+                        column: x => x.BasketId,
+                        principalTable: "Basket",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BasketProducts_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_BasketItems_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderItems",
+                name: "OrderProducts",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TotalPrice = table.Column<double>(nullable: false),
-                    Count = table.Column<int>(nullable: false),
                     OrderId = table.Column<int>(nullable: false),
                     ProductId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderItems", x => x.Id);
+                    table.PrimaryKey("PK_OrderProducts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OrderItems_Orders_OrderId",
+                        name: "FK_OrderProducts_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_OrderItems_Products_ProductId",
+                        name: "FK_OrderProducts_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id",
@@ -568,7 +608,7 @@ namespace Allup.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FullName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "admin", 0, "cfadf4be-a114-4eb1-a862-914d046081bb", null, false, "Tural Cavadov", false, null, null, null, null, null, false, "f0bfd589-42e7-42d9-9d99-b4da87b7093e", false, null });
+                values: new object[] { "admin", 0, "519ef060-5950-448e-929a-d60c82121f15", null, false, "Tural Cavadov", false, null, null, null, null, null, false, "647f92c6-6f5b-4d04-84c3-8b2e19cae726", false, null });
 
             migrationBuilder.InsertData(
                 table: "Banners",
@@ -586,13 +626,16 @@ namespace Allup.Migrations
 
             migrationBuilder.InsertData(
                 table: "Brands",
-                columns: new[] { "Id", "CreatedAt", "DeletedAt", "IsDeleted", "Name", "UpdatedAt" },
+                columns: new[] { "Id", "CreatedAt", "DeletedAt", "ImgUrl", "IsDeleted", "Name", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2022, 7, 27, 5, 17, 9, 601, DateTimeKind.Local).AddTicks(8689), null, false, "brand1", null },
-                    { 2, new DateTime(2022, 7, 27, 5, 17, 9, 601, DateTimeKind.Local).AddTicks(8877), null, false, "brand2", null },
-                    { 3, new DateTime(2022, 7, 27, 5, 17, 9, 601, DateTimeKind.Local).AddTicks(8884), null, false, "brand3", null },
-                    { 4, new DateTime(2022, 7, 27, 5, 17, 9, 601, DateTimeKind.Local).AddTicks(8885), null, false, "brand4", null }
+                    { 1, new DateTime(2022, 7, 31, 23, 26, 54, 227, DateTimeKind.Local).AddTicks(2862), null, "brand-1.jpg", false, "brand1", null },
+                    { 2, new DateTime(2022, 7, 31, 23, 26, 54, 227, DateTimeKind.Local).AddTicks(3871), null, "brand-2.jpg", false, "brand2", null },
+                    { 3, new DateTime(2022, 7, 31, 23, 26, 54, 227, DateTimeKind.Local).AddTicks(3913), null, "brand-3.jpg", false, "brand3", null },
+                    { 4, new DateTime(2022, 7, 31, 23, 26, 54, 227, DateTimeKind.Local).AddTicks(3923), null, "brand-4.jpg", false, "brand4", null },
+                    { 5, new DateTime(2022, 7, 31, 23, 26, 54, 227, DateTimeKind.Local).AddTicks(3926), null, "brand-5.jpg", false, "brand5", null },
+                    { 6, new DateTime(2022, 7, 31, 23, 26, 54, 227, DateTimeKind.Local).AddTicks(3950), null, "brand-6.jpg", false, "brand6", null },
+                    { 7, new DateTime(2022, 7, 31, 23, 26, 54, 227, DateTimeKind.Local).AddTicks(3956), null, "brand-4.jpg", false, "brand7", null }
                 });
 
             migrationBuilder.InsertData(
@@ -600,10 +643,22 @@ namespace Allup.Migrations
                 columns: new[] { "Id", "CreatedAt", "DeletedAt", "ImgUrl", "IsDeleted", "Name", "ParentId", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2022, 7, 27, 5, 17, 9, 601, DateTimeKind.Local).AddTicks(6777), null, "category-1.jpg", false, "Laptop", null, null },
-                    { 2, new DateTime(2022, 7, 27, 5, 17, 9, 601, DateTimeKind.Local).AddTicks(7075), null, "category-2.jpg", false, "Computer", null, null },
-                    { 3, new DateTime(2022, 7, 27, 5, 17, 9, 601, DateTimeKind.Local).AddTicks(7115), null, "category-3.jpg", false, "Smartphone", null, null },
-                    { 4, new DateTime(2022, 7, 27, 5, 17, 9, 601, DateTimeKind.Local).AddTicks(7117), null, "category-4.jpg", false, "Game Consoles", null, null }
+                    { 1, new DateTime(2022, 7, 31, 23, 26, 54, 226, DateTimeKind.Local).AddTicks(5892), null, "category-1.jpg", false, "Laptop", null, null },
+                    { 2, new DateTime(2022, 7, 31, 23, 26, 54, 226, DateTimeKind.Local).AddTicks(6765), null, "category-2.jpg", false, "Computer", null, null },
+                    { 3, new DateTime(2022, 7, 31, 23, 26, 54, 226, DateTimeKind.Local).AddTicks(6821), null, "category-3.jpg", false, "Smartphone", null, null },
+                    { 4, new DateTime(2022, 7, 31, 23, 26, 54, 226, DateTimeKind.Local).AddTicks(6826), null, "category-4.jpg", false, "Game Consoles", null, null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "FeatureBanners",
+                columns: new[] { "Id", "Desc", "ImgUrl", "Title" },
+                values: new object[,]
+                {
+                    { 4, "If goods have problems", "icon4.png", "90 Days Return" },
+                    { 5, "We ensure secure payment", "icon5.png", "Payment Secure" },
+                    { 2, "Contact us 24 hours a day", "icon2.png", "Support 24/7" },
+                    { 3, "You have 30 days to Return", "icon3.png", "100% Money Back" },
+                    { 1, "Free shipping on all US order", "icon1.png", "Free Shipping" }
                 });
 
             migrationBuilder.InsertData(
@@ -620,8 +675,8 @@ namespace Allup.Migrations
                 columns: new[] { "Id", "Description", "MainTitle", "SubTitle" },
                 values: new object[,]
                 {
-                    { 2, "Explore and immerse in exciting 360 content with Fulldive’s all-in-one virtual reality platform", "<span>4K HDR Smart TV 43 </span> Sony Bravia.", "Save $120 when you buy" },
-                    { 1, "Explore and immerse in exciting 360 content with Fulldive’s all-in-one virtual reality platform", "<span>4K HDR Smart TV 43 </span> Sony Bravia.", "Save $120 when you buy" }
+                    { 1, "Explore and immerse in exciting 360 content with Fulldive’s all-in-one virtual reality platform", "<span>4K HDR Smart TV 43 </span> Sony Bravia.", "Save $120 when you buy" },
+                    { 2, "Explore and immerse in exciting 360 content with Fulldive’s all-in-one virtual reality platform", "<span>4K HDR Smart TV 43 </span> Sony Bravia.", "Save $120 when you buy" }
                 });
 
             migrationBuilder.InsertData(
@@ -643,13 +698,13 @@ namespace Allup.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { 1, "New" },
                     { 2, "Bags" },
                     { 3, "Kids" },
                     { 4, "Electronic" },
                     { 5, "Shirts" },
                     { 6, "Game" },
-                    { 7, "Camera" }
+                    { 7, "Camera" },
+                    { 1, "New" }
                 });
 
             migrationBuilder.InsertData(
@@ -657,9 +712,9 @@ namespace Allup.Migrations
                 columns: new[] { "Id", "AuthorName", "Content", "ImgUrl", "Site" },
                 values: new object[,]
                 {
+                    { 3, "John Doe", "An has feugiat vivendum, ad vix tacimates accusamus, cum commune lucilius no. Sit at alia civibus indoctum, ea mel regione percipit adipisci. Per modus nostrum vituperata no, eam ne magna solum constituam.", "author-1.png", "email@yourwebsitename.com" },
                     { 1, "John Doe", "An has feugiat vivendum, ad vix tacimates accusamus, cum commune lucilius no. Sit at alia civibus indoctum, ea mel regione percipit adipisci. Per modus nostrum vituperata no, eam ne magna solum constituam.", "author-1.png", "email@yourwebsitename.com" },
-                    { 2, "John Doe", "An has feugiat vivendum, ad vix tacimates accusamus, cum commune lucilius no. Sit at alia civibus indoctum, ea mel regione percipit adipisci. Per modus nostrum vituperata no, eam ne magna solum constituam.", "author-1.png", "email@yourwebsitename.com" },
-                    { 3, "John Doe", "An has feugiat vivendum, ad vix tacimates accusamus, cum commune lucilius no. Sit at alia civibus indoctum, ea mel regione percipit adipisci. Per modus nostrum vituperata no, eam ne magna solum constituam.", "author-1.png", "email@yourwebsitename.com" }
+                    { 2, "John Doe", "An has feugiat vivendum, ad vix tacimates accusamus, cum commune lucilius no. Sit at alia civibus indoctum, ea mel regione percipit adipisci. Per modus nostrum vituperata no, eam ne magna solum constituam.", "author-1.png", "email@yourwebsitename.com" }
                 });
 
             migrationBuilder.InsertData(
@@ -667,10 +722,10 @@ namespace Allup.Migrations
                 columns: new[] { "Id", "CategoryId", "CreatedAt", "Desc", "ImgUrl", "Title", "UserId" },
                 values: new object[,]
                 {
-                    { 1, 1, new DateTime(2022, 7, 27, 5, 17, 9, 600, DateTimeKind.Local).AddTicks(8690), "simply dummy text of the printing and typesetting industry. Lorem Ipsum ...", "blog-1.jpg", "This is Third Post For XipBlog", "admin" },
-                    { 2, 1, new DateTime(2022, 7, 27, 5, 17, 9, 601, DateTimeKind.Local).AddTicks(4623), "simply dummy text of the printing and typesetting industry. Lorem Ipsum ...", "blog-2.jpg", "This is Third Post For XipBlog", "admin" },
-                    { 3, 1, new DateTime(2022, 7, 27, 5, 17, 9, 601, DateTimeKind.Local).AddTicks(4665), "simply dummy text of the printing and typesetting industry. Lorem Ipsum ...", "blog-3.jpg", "This is Third Post For XipBlog", "admin" },
-                    { 4, 1, new DateTime(2022, 7, 27, 5, 17, 9, 601, DateTimeKind.Local).AddTicks(4667), "simply dummy text of the printing and typesetting industry. Lorem Ipsum ...", "blog-4.jpg", "This is Third Post For XipBlog", "admin" }
+                    { 1, 1, new DateTime(2022, 7, 31, 23, 26, 54, 223, DateTimeKind.Local).AddTicks(4905), "simply dummy text of the printing and typesetting industry. Lorem Ipsum ...", "blog-1.jpg", "This is Third Post For XipBlog", "admin" },
+                    { 2, 1, new DateTime(2022, 7, 31, 23, 26, 54, 225, DateTimeKind.Local).AddTicks(5696), "simply dummy text of the printing and typesetting industry. Lorem Ipsum ...", "blog-2.jpg", "This is Third Post For XipBlog", "admin" },
+                    { 3, 1, new DateTime(2022, 7, 31, 23, 26, 54, 225, DateTimeKind.Local).AddTicks(5942), "simply dummy text of the printing and typesetting industry. Lorem Ipsum ...", "blog-3.jpg", "This is Third Post For XipBlog", "admin" },
+                    { 4, 1, new DateTime(2022, 7, 31, 23, 26, 54, 225, DateTimeKind.Local).AddTicks(5951), "simply dummy text of the printing and typesetting industry. Lorem Ipsum ...", "blog-4.jpg", "This is Third Post For XipBlog", "admin" }
                 });
 
             migrationBuilder.InsertData(
@@ -678,25 +733,25 @@ namespace Allup.Migrations
                 columns: new[] { "Id", "CreatedAt", "DeletedAt", "ImgUrl", "IsDeleted", "Name", "ParentId", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 7, new DateTime(2022, 7, 27, 5, 17, 9, 601, DateTimeKind.Local).AddTicks(7282), null, "category-5.jpg", false, "Bottoms", 1, null },
-                    { 8, new DateTime(2022, 7, 27, 5, 17, 9, 601, DateTimeKind.Local).AddTicks(7291), null, "category-6.jpg", false, "Tops & Sets", 2, null },
-                    { 10, new DateTime(2022, 7, 27, 5, 17, 9, 601, DateTimeKind.Local).AddTicks(7294), null, "category-8.jpg", false, "Accessories", 2, null },
-                    { 9, new DateTime(2022, 7, 27, 5, 17, 9, 601, DateTimeKind.Local).AddTicks(7293), null, "category-7.jpg", false, "Audio & Video", 3, null },
-                    { 11, new DateTime(2022, 7, 27, 5, 17, 9, 601, DateTimeKind.Local).AddTicks(7296), null, "category-9.jpg", false, "Camera", 3, null },
-                    { 12, new DateTime(2022, 7, 27, 5, 17, 9, 601, DateTimeKind.Local).AddTicks(7297), null, "category-10.jpg", false, "Accessories2", 4, null },
-                    { 13, new DateTime(2022, 7, 27, 5, 17, 9, 601, DateTimeKind.Local).AddTicks(7298), null, "category-11.jpg", false, "Games & Consoles", 4, null },
-                    { 14, new DateTime(2022, 7, 27, 5, 17, 9, 601, DateTimeKind.Local).AddTicks(7299), null, "category-12.jpg", false, "Video Games", 4, null }
+                    { 7, new DateTime(2022, 7, 31, 23, 26, 54, 226, DateTimeKind.Local).AddTicks(7284), null, null, false, "Bottoms", 1, null },
+                    { 8, new DateTime(2022, 7, 31, 23, 26, 54, 226, DateTimeKind.Local).AddTicks(7310), null, null, false, "Tops & Sets", 2, null },
+                    { 10, new DateTime(2022, 7, 31, 23, 26, 54, 226, DateTimeKind.Local).AddTicks(7317), null, null, false, "Accessories", 2, null },
+                    { 9, new DateTime(2022, 7, 31, 23, 26, 54, 226, DateTimeKind.Local).AddTicks(7314), null, null, false, "Audio & Video", 3, null },
+                    { 11, new DateTime(2022, 7, 31, 23, 26, 54, 226, DateTimeKind.Local).AddTicks(7321), null, null, false, "Camera", 3, null },
+                    { 12, new DateTime(2022, 7, 31, 23, 26, 54, 226, DateTimeKind.Local).AddTicks(7323), null, null, false, "Accessories2", 4, null },
+                    { 13, new DateTime(2022, 7, 31, 23, 26, 54, 226, DateTimeKind.Local).AddTicks(7326), null, null, false, "Games & Consoles", 4, null },
+                    { 14, new DateTime(2022, 7, 31, 23, 26, 54, 226, DateTimeKind.Local).AddTicks(7329), null, null, false, "Video Games", 4, null }
                 });
 
             migrationBuilder.InsertData(
                 table: "Products",
-                columns: new[] { "Id", "BrandId", "CategoryId", "Count", "CreatedAt", "DeletedAt", "DiscountPrice", "IsBestSeller", "IsFeatured", "IsNewArrivel", "Name", "Price", "TaxPercent", "UpdatedAt" },
+                columns: new[] { "Id", "BrandId", "CategoryId", "Count", "CreatedAt", "DeletedAt", "Description", "DiscountPercent", "DiscountPrice", "IsBestSeller", "IsDelete", "IsFeatured", "IsNewArrivel", "Name", "Price", "TaxPercent", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, 1, 7, 5, new DateTime(2022, 7, 27, 5, 17, 9, 602, DateTimeKind.Local).AddTicks(955), null, null, true, false, true, "Product1", 50.0, null, null },
-                    { 2, 2, 8, 3, new DateTime(2022, 7, 27, 5, 17, 9, 602, DateTimeKind.Local).AddTicks(1412), null, null, true, false, true, "Product2", 55.0, null, null },
-                    { 4, 4, 10, 6, new DateTime(2022, 7, 27, 5, 17, 9, 602, DateTimeKind.Local).AddTicks(1435), null, null, false, true, false, "Product4", 75.0, null, null },
-                    { 3, 3, 9, 5, new DateTime(2022, 7, 27, 5, 17, 9, 602, DateTimeKind.Local).AddTicks(1433), null, null, false, true, false, "Product3", 65.0, null, null }
+                    { 1, 1, 7, 5, new DateTime(2022, 7, 31, 23, 26, 54, 228, DateTimeKind.Local).AddTicks(7737), null, "lorem ipsum", null, null, true, false, false, true, "Product1", 50.0, null, null },
+                    { 2, 2, 8, 3, new DateTime(2022, 7, 31, 23, 26, 54, 228, DateTimeKind.Local).AddTicks(9060), null, "lorem ipsum", null, null, true, false, false, true, "Product2", 55.0, null, null },
+                    { 4, 4, 10, 6, new DateTime(2022, 7, 31, 23, 26, 54, 228, DateTimeKind.Local).AddTicks(9129), null, "lorem ipsum", null, null, false, false, true, false, "Product4", 75.0, null, null },
+                    { 3, 3, 9, 5, new DateTime(2022, 7, 31, 23, 26, 54, 228, DateTimeKind.Local).AddTicks(9125), null, "test", null, null, false, false, true, false, "Product3", 65.0, null, null }
                 });
 
             migrationBuilder.InsertData(
@@ -775,14 +830,19 @@ namespace Allup.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BasketItems_ProductId",
-                table: "BasketItems",
-                column: "ProductId");
+                name: "IX_Basket_UserId",
+                table: "Basket",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BasketItems_UserId",
-                table: "BasketItems",
-                column: "UserId");
+                name: "IX_BasketProducts_BasketId",
+                table: "BasketProducts",
+                column: "BasketId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BasketProducts_ProductId",
+                table: "BasketProducts",
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Blogs_CategoryId",
@@ -810,13 +870,13 @@ namespace Allup.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_OrderId",
-                table: "OrderItems",
+                name: "IX_OrderProducts_OrderId",
+                table: "OrderProducts",
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_ProductId",
-                table: "OrderItems",
+                name: "IX_OrderProducts_ProductId",
+                table: "OrderProducts",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
@@ -871,7 +931,7 @@ namespace Allup.Migrations
                 name: "Banners");
 
             migrationBuilder.DropTable(
-                name: "BasketItems");
+                name: "BasketProducts");
 
             migrationBuilder.DropTable(
                 name: "Bios");
@@ -883,10 +943,13 @@ namespace Allup.Migrations
                 name: "ContactUs");
 
             migrationBuilder.DropTable(
+                name: "FeatureBanners");
+
+            migrationBuilder.DropTable(
                 name: "Languages");
 
             migrationBuilder.DropTable(
-                name: "OrderItems");
+                name: "OrderProducts");
 
             migrationBuilder.DropTable(
                 name: "ProductImages");
@@ -911,6 +974,9 @@ namespace Allup.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Basket");
 
             migrationBuilder.DropTable(
                 name: "Blogs");

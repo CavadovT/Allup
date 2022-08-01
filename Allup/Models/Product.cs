@@ -11,7 +11,7 @@ namespace Allup.Models
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
-      
+        [Required]
         public string Description { get; set; }
         public bool IsFeatured { get; set; }
         public bool IsBestSeller { get; set; }
@@ -38,8 +38,8 @@ namespace Allup.Models
         public Brand Brand { get; set; }
         public List<TagProducts> TagProducts { get; set; }
         public List<ProductImage> ProductImages { get; set; }
-        public List<OrderItem> OrderItems { get; set; }
-        public List<BasketItem> BasketItems { get; set; }
+        public List<OrderProducts> OrderProducts { get; set; }
+        public List<BasketProducts> BasketProducts { get; set; }
         [NotMapped]
         public List<IFormFile> Photos { get; set; }
         [NotMapped]

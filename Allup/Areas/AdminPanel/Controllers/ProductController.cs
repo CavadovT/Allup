@@ -1,6 +1,7 @@
 ﻿using Allup.DAL;
 using Allup.Extentions;
 using Allup.Helpers;
+using Allup.Interfaces;
 using Allup.Models;
 using Allup.ViewModels;
 using Microsoft.AspNetCore.Hosting;
@@ -21,10 +22,12 @@ namespace Allup.Areas.AdminPanel.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IWebHostEnvironment _env;
-        public ProductController(AppDbContext context, IWebHostEnvironment environment)
+        private readonly IEmailService _eservice;
+        public ProductController(AppDbContext context, IWebHostEnvironment environment, IEmailService emailService)
         {
             _context = context;
             _env = environment;
+            _eservice = emailService;
         }
         /// <summary>
         /// Index action for Product
@@ -43,8 +46,8 @@ namespace Allup.Areas.AdminPanel.Controllers
                 .Include(p => p.ProductImages)
                 .Include(p => p.TagProducts)
                 .ThenInclude(tp => tp.Tag)
-                .Include(p => p.OrderItems)
-                .Include(p => p.BasketItems)
+                .Include(p => p.OrderProducts)
+                .ThenInclude(p => p.Order)
                 .Skip((page - 1) * take).Take(take).ToListAsync();
 
             int pageCount = await PageCount(take);
@@ -98,9 +101,15 @@ namespace Allup.Areas.AdminPanel.Controllers
                 return View();
 
             }
+            bool IsExistName = await _context.Products.Where(p => p.IsDelete == false).AnyAsync(p => p.Name.ToLower().Contains(product.Name.ToLower()));
+            if (IsExistName)
+            {
+                ModelState.AddModelError("Name", "this product alredy exist");
+                return View();
+            }
             if (product.Photos == null)
             {
-                ModelState.AddModelError("Photos", "Please chose the photo");
+                ModelState.AddModelError("Photos", "Please choose the photo");
                 return View();
             }
             List<ProductImage> images = new List<ProductImage>();
@@ -109,7 +118,7 @@ namespace Allup.Areas.AdminPanel.Controllers
             {
                 if (img == null)
                 {
-                    ModelState.AddModelError("Photos", "don't leave it blank!!!");
+                    ModelState.AddModelError("Photos", "Don't leave it blank!!!");
                     return View();
                 }
                 if (!img.IsImage())
@@ -176,6 +185,18 @@ namespace Allup.Areas.AdminPanel.Controllers
 
             _context.Products.Add(newProduct);
             _context.SaveChanges();
+
+            List<string> emails = await _context.Subscribers.Select(x => x.Email).ToListAsync();
+            foreach (var email in emails) 
+            {
+             _eservice.SendEmail(email, "New Product", $"http://localhost:37224");
+
+            }
+
+
+
+
+
             return RedirectToAction("index");
         }
         /// <summary>
@@ -235,7 +256,7 @@ namespace Allup.Areas.AdminPanel.Controllers
                 .Include(p => p.TagProducts)
                 .ThenInclude(tp => tp.Tag)
                 .FirstOrDefaultAsync(c => c.Id == id);
-             
+
             ViewBag.Categories = new SelectList(await _context.Categories.Where(c => c.IsDeleted == false).Where(c => c.ParentId != null).ToListAsync(), "Id", "Name");
             ViewBag.Brands = new SelectList(await _context.Brands.Where(b => b.IsDeleted == false).ToListAsync(), "Id", "Name");
             ViewBag.Tags = new SelectList(await _context.Tags.ToListAsync(), "Id", "Name");
@@ -246,13 +267,13 @@ namespace Allup.Areas.AdminPanel.Controllers
             {
                 tagNames.Add(item.Tag.Name);
             }
-            dbProd.TagNames=tagNames;
+            dbProd.TagNames = tagNames;
             dbProd.Tags = tags;
             return View(dbProd);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(Product product,List<int> TgIdss)
+        public async Task<IActionResult> Update(Product product, List<int> TgIdss)
         {
             Product dbProduct = _context.Products
               .Include(p => p.ProductImages)
@@ -302,7 +323,7 @@ namespace Allup.Areas.AdminPanel.Controllers
 
                 if (product.Photos == null)
                 {
-                    dbProduct.ProductImages=dbProduct.ProductImages;
+                    dbProduct.ProductImages = dbProduct.ProductImages;
                 }
                 else
                 {
@@ -334,7 +355,7 @@ namespace Allup.Areas.AdminPanel.Controllers
                             return View(dbProduct);
                         }
                         ProductImage image = new ProductImage();
-                        
+
                         image.ImgUrl = img.SaveImage(_env, "assets/images/product");
                         if (product.Photos.Count == 1)
                         {
@@ -349,7 +370,7 @@ namespace Allup.Areas.AdminPanel.Controllers
                         }
                         images.Add(image);
                     }
-                    dbProduct.ProductImages=images;
+                    dbProduct.ProductImages = images;
                 }
                 List<TagProducts> newtagProducts = new List<TagProducts>();
                 foreach (var tagId in TgIdss)
@@ -365,11 +386,11 @@ namespace Allup.Areas.AdminPanel.Controllers
                 {
                     if (dbProductName.Name.Trim().ToLower() != dbProduct.Name.Trim().ToLower())
                     {
-                        ModelState.AddModelError("Name", "with this name category allready exist");
+                        ModelState.AddModelError("Name", "This category is already exist");
                         return View(dbProduct);
                     }
                 }
-               
+
                 dbProduct.Name = product.Name;
                 dbProduct.Price = product.Price;
                 dbProduct.Description = product.Description;
@@ -382,9 +403,9 @@ namespace Allup.Areas.AdminPanel.Controllers
                 dbProduct.IsFeatured = product.IsFeatured;
                 dbProduct.IsNewArrivel = product.IsNewArrivel;
                 dbProduct.TagProducts = newtagProducts;
-                dbProduct.UpdatedAt=DateTime.Now;
+                dbProduct.UpdatedAt = DateTime.Now;
                 _context.SaveChanges();
-                
+
             }
             return RedirectToAction("index");
         }
