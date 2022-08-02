@@ -57,6 +57,7 @@ namespace Allup
 
 
             }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+
             services.AddScoped<IEmailService, EmailService>();
             
         }

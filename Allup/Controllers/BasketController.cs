@@ -92,7 +92,7 @@ namespace Allup.Controllers
             }
 
             Response.Cookies.Append($"{userName}basket", JsonConvert.SerializeObject(products), new CookieOptions { MaxAge = TimeSpan.FromDays(3) });
-            return RedirectToAction("index", "shop");
+            return RedirectToAction("index", "home");
         }
         /// <summary>
         /// Show card action

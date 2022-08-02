@@ -23,7 +23,6 @@ namespace Allup.DAL
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<Slider> Sliders { get; set; }
-        public DbSet<SliderContent> SliderContents { get; set; }
         public DbSet<Subscriber> Subscribers { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<TagProducts> TagProducts { get; set; }
@@ -74,14 +73,10 @@ namespace Allup.DAL
                 );
             builder.Entity<Slider>().HasData
                 (
-                new Slider { Id = 1, ImgUrl = "slider-1.jpg" },
-                new Slider { Id = 2, ImgUrl = "slider-2.jpg" }
+                new Slider { Id = 1, ImgUrl = "slider-1.jpg" , SubTitle = "Save $120 when you buy", MainTitle = "<span>4K HDR Smart TV 43 </span> Sony Bravia.", Description = "Explore and immerse in exciting 360 content with Fulldive’s all-in-one virtual reality platform" },
+                new Slider { Id = 2, ImgUrl = "slider-2.jpg", SubTitle = "Save $120 when you buy", MainTitle = "<span>4K HDR Smart TV 43 </span> Sony Bravia.", Description = "Explore and immerse in exciting 360 content with Fulldive’s all-in-one virtual reality platform" }
                 );
-            builder.Entity<SliderContent>().HasData
-                (
-                new SliderContent { Id = 1, SubTitle = "Save $120 when you buy", MainTitle = "<span>4K HDR Smart TV 43 </span> Sony Bravia.", Description = "Explore and immerse in exciting 360 content with Fulldive’s all-in-one virtual reality platform" },
-                new SliderContent { Id = 2, SubTitle = "Save $120 when you buy", MainTitle = "<span>4K HDR Smart TV 43 </span> Sony Bravia.", Description = "Explore and immerse in exciting 360 content with Fulldive’s all-in-one virtual reality platform" }
-                );
+           
             builder.Entity<Category>().HasData
                 (
                 new Category { Id = 1, Name = "Laptop", IsDeleted = false, ImgUrl = "category-1.jpg", CreatedAt = DateTime.Now },

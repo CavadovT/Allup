@@ -38,7 +38,8 @@ namespace Allup.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterVM registerVM)
         {
-            if (!ModelState.IsValid) return View();
+            //if (!ModelState.IsValid) 
+            //    return View();
 
             User user = new User
             {
@@ -58,14 +59,14 @@ namespace Allup.Controllers
           
             await _userManager.AddToRoleAsync(user, UserRoles.Member.ToString());
 
-            if (registerVM.Subscribe == true) 
-            {
-                Subscriber subscriber = new Subscriber { Email=user.Email };
-                await _context.Subscribers.AddAsync(subscriber);
-                await _context.SaveChangesAsync();
-            }
+            //if (registerVM.Subscribe == true) 
+            //{
+            //    Subscriber subscriber = new Subscriber { Email=user.Email };
+            //    await _context.Subscribers.AddAsync(subscriber);
+            //    await _context.SaveChangesAsync();
+            //}
 
-            return RedirectToAction("Index", "home");
+            return RedirectToAction("login");
         }
 
 

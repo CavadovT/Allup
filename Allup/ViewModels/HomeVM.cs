@@ -6,7 +6,6 @@ namespace Allup.ViewModels
     public class HomeVM
     {
         public List<Slider> Sliders { get; set; }
-        public List<SliderContent> SliderContents { get; set; }
         public List<Banner> Banners { get; set; }
 
         public List<Category> Categories { get; set; }

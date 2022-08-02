@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Allup.Areas.AdminPanel.Controllers
@@ -41,6 +42,7 @@ namespace Allup.Areas.AdminPanel.Controllers
 
         public async Task<IActionResult> Update(string Id)
         {
+            
             User user = await _userManager.FindByIdAsync(Id);
             var userRoles = await _userManager.GetRolesAsync(user);
             var roles = await _roleManager.Roles.ToListAsync();

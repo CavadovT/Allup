@@ -87,6 +87,7 @@ namespace Allup.Areas.AdminPanel.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Product product, bool isfeature, bool isnew, bool isbest)
         {
+           
             ViewBag.Brands = new SelectList(await _context.Brands.Where(b => b.IsDeleted == false).ToListAsync(), "Id", "Name");
             ViewBag.Categories = new SelectList(await _context.Categories.Where(c => c.IsDeleted == false).Where(c => c.ParentId != null).ToListAsync(), "Id", "Name");
             ViewBag.Tags = new SelectList(await _context.Tags.ToListAsync(), "Id", "Name");
@@ -101,6 +102,7 @@ namespace Allup.Areas.AdminPanel.Controllers
                 return View();
 
             }
+           
             bool IsExistName = await _context.Products.Where(p => p.IsDelete == false).AnyAsync(p => p.Name.ToLower().Contains(product.Name.ToLower()));
             if (IsExistName)
             {
@@ -183,19 +185,15 @@ namespace Allup.Areas.AdminPanel.Controllers
             }
             newProduct.TagProducts = tagProducts;
 
-            _context.Products.Add(newProduct);
-            _context.SaveChanges();
 
             List<string> emails = await _context.Subscribers.Select(x => x.Email).ToListAsync();
-            foreach (var email in emails) 
+            foreach (var email in emails)
             {
-             _eservice.SendEmail(email, "New Product", $"http://localhost:37224");
+                _eservice.SendEmail(email, "New Product", $"Name of product: {newProduct.Name},Price:{newProduct.Price} https://preview.themeforest.net/item/allup-electronics-ecommerce-html5-template/full_screen_preview/27042714?_ga=2.94426207.2135673103.1659419617-1585959507.1656861724");
 
             }
-
-
-
-
+            _context.Products.Add(newProduct);
+            _context.SaveChanges();
 
             return RedirectToAction("index");
         }

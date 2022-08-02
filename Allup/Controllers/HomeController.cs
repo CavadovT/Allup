@@ -22,11 +22,10 @@ namespace Allup.Controllers
         {
             HomeVM homeVM = new HomeVM();
             homeVM.Sliders = await _context.Sliders.ToListAsync();
-            homeVM.Categories = await _context.Categories.ToListAsync();
-            homeVM.SliderContents = await _context.SliderContents.ToListAsync();
+            homeVM.Categories = await _context.Categories.Where(c=>c.IsDeleted==false).ToListAsync();
             homeVM.Banners = await _context.Banners.ToListAsync();
             homeVM.Brands= await _context.Brands.ToListAsync();
-            homeVM.Products=await _context.Products.Include(p=>p.Category).Include(p=>p.ProductImages).ToListAsync();
+            homeVM.Products=await _context.Products.Where(p=>p.IsDelete==false).Include(p=>p.Category).Include(p=>p.ProductImages).ToListAsync();
             homeVM.Blogs=await _context.Blogs.OrderByDescending(b=>b.Id).Skip(3).ToListAsync();
             homeVM.Testonominal = await _context.Testonominals.FirstOrDefaultAsync();
            

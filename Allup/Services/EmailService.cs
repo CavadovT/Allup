@@ -35,6 +35,7 @@ namespace Allup.Services
             try
             {
                 client.Send(mail);
+                return true;
 
             }
             catch (System.Exception)
