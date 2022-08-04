@@ -19,7 +19,7 @@ namespace Allup.Services
         public bool SendEmail(List<string> emails, string subject, string message)
         {
             var mail = new MailMessage();
-            mail.From = new MailAddress(_config.GetSection("MailSettings:Mail").Value);
+            mail.From = new MailAddress(_config.GetSection("MySettings:Mail").Value);
 
             
 
@@ -28,7 +28,7 @@ namespace Allup.Services
             mail.Body = message;
             mail.IsBodyHtml = true;
             SmtpClient client = new SmtpClient();
-            client.Credentials = new System.Net.NetworkCredential(_config.GetSection("MailSettings:Mail").Value, _config.GetSection("MailSettings:Password").Value);
+            client.Credentials = new System.Net.NetworkCredential(_config.GetSection("MySettings:Mail").Value, _config.GetSection("MySettings:Password").Value);
 
             client.Host = "smtp.gmail.com";
             client.Port = 587;
