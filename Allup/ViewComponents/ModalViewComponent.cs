@@ -20,6 +20,7 @@ namespace Allup.ViewComponents
         {
             _context = context;
             _userManager = userManager;
+            //test
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
