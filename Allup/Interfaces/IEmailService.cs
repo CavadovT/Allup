@@ -5,6 +5,6 @@ namespace Allup.Interfaces
 {
     public interface IEmailService
     {
-       bool SendEmail(string email, string subject, string message);
+       bool SendEmail(List<string> email, string subject, string message);
     }
 }

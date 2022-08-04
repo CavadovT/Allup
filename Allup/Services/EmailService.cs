@@ -1,5 +1,6 @@
 ﻿using Allup.Interfaces;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 using System.Net.Mail;
 using System.Threading.Tasks;
 
@@ -15,12 +16,12 @@ namespace Allup.Services
             _config = config;
         }
 
-        public bool SendEmail(string email, string subject, string message)
+        public bool SendEmail(List<string> emails, string subject, string message)
         {
             var mail = new MailMessage();
             mail.From = new MailAddress(_config.GetSection("MailSettings:Mail").Value);
 
-            mail.To.Add(new MailAddress(email));
+            
 
 
             mail.Subject = subject;
@@ -34,9 +35,13 @@ namespace Allup.Services
             client.EnableSsl = true;
             try
             {
-                client.Send(mail);
-                return true;
+                foreach (var email in emails)
+                {
+                    mail.To.Add(new MailAddress(email));
 
+                }
+                client.Send(mail);
+               
             }
             catch (System.Exception)
             {
@@ -44,8 +49,8 @@ namespace Allup.Services
 
             }
             return false;
+          
         }
-
 
     }
 }

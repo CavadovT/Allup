@@ -187,11 +187,10 @@ namespace Allup.Areas.AdminPanel.Controllers
 
 
             List<string> emails = await _context.Subscribers.Select(x => x.Email).ToListAsync();
-            foreach (var email in emails)
-            {
-                _eservice.SendEmail(email, "New Product", $"Name of product: {newProduct.Name},Price:{newProduct.Price} https://preview.themeforest.net/item/allup-electronics-ecommerce-html5-template/full_screen_preview/27042714?_ga=2.94426207.2135673103.1659419617-1585959507.1656861724");
+            
+            _eservice.SendEmail(emails, "New Product", $"Name of product: {newProduct.Name},Price:{newProduct.Price} https://preview.themeforest.net/item/allup-electronics-ecommerce-html5-template/full_screen_preview/27042714?_ga=2.94426207.2135673103.1659419617-1585959507.1656861724");
 
-            }
+            
             _context.Products.Add(newProduct);
             _context.SaveChanges();
 
